@@ -1,0 +1,296 @@
+﻿@using DIPLOMA.Models
+@using DIPLOMA.Models.ViewModels
+@using System.Net
+
+@using Microsoft.AspNetCore.Authorization
+@using System.Net.Http;
+@using Newtonsoft.Json;
+@using Microsoft.Extensions.Logging
+@using System.IO;
+@using Microsoft.AspNetCore.Components.Forms;
+@using Microsoft.JSInterop
+@using DIPLOMA.Controllers;
+
+@attribute [Authorize]
+@inject MsgWidgetsController controller
+
+@inject IJSRuntime JsRuntime
+
+@code {
+
+    HttpClient Http = new HttpClient();
+    private string foooo = "";
+
+    private string animationPath;
+
+    private string soundPath;
+
+    [Parameter]
+    public string Foo { get; set; }
+
+    [Parameter]
+    public MsgWidgetViewModel VM { get; set; }
+    [Parameter]
+    public MsgWidget MWidget { get; set; }
+
+
+    private async Task AddContent()
+    {
+        var animation = new UploadFile() { Name = "Test Anim" };
+
+        var sound = new UploadFile() { Name = "Test Sound" };
+
+        var foo = new MsgWidgetContent();
+        foo.Amination = animation;
+        foo.Sound = sound;
+
+        VM.MsgWidgetContent.Add(foo);
+    }
+
+    private async Task HandleValidSubmit(EditContext editContext)
+    {
+
+
+        try
+        {
+            var res = await controller.Create((MsgWidgetViewModel)editContext.Model);
+
+            var myContent = JsonConvert.SerializeObject((MsgWidgetViewModel)editContext.Model);
+            var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+            var byteContent = new ByteArrayContent(buffer);
+            byteContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+            var response = await Http.PostAsync(
+            "MsgWidgets/Create", byteContent);
+
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException(
+                    $"Validation failed. Status Code: {response.StatusCode}");
+            }
+
+        }
+
+        catch (Exception ex)
+        {
+            throw new HttpRequestException(ex.Message);
+        }
+    }
+}
+
+@VM.Foo;
+@VM.MWidget.UserID;
+
+<EditForm Model="@VM" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+
+
+    <div class="form-group">
+        <CustomLabel TItem="MsgWidget" aspfor="@nameof(MsgWidget.Name)" CssClass="control-label"></CustomLabel>
+        <InputText @bind-Value="VM.MWidget.Name" class="form-control"></InputText>
+        <ValidationMessage For="() => VM.MWidget.Name" class="text-danger"></ValidationMessage>
+    </div>
+
+    <div class="form-group">
+        <CustomLabel TItem="MsgWidget" aspfor="@nameof(MsgWidget.HeaderText)" CssClass="control-label"></CustomLabel>
+        <InputText @bind-Value="VM.MWidget.HeaderText" class="form-control"></InputText>
+        <ValidationMessage For="() => VM.MWidget.HeaderText" class="text-danger"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <CustomLabel TItem="MsgWidget" aspfor="@nameof(MsgWidget.RandomContent)" CssClass="control-label"></CustomLabel>
+        <InputCheckbox @bind-Value="VM.MWidget.RandomContent"></InputCheckbox>
+        <ValidationMessage For="() => VM.MWidget.RandomContent" class="text-danger"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <CustomLabel TItem="MsgWidget" aspfor="@nameof(MsgWidget.ReadHeader)" CssClass="control-label"></CustomLabel>
+        <InputCheckbox @bind-Value="VM.MWidget.ReadHeader"></InputCheckbox>
+        <ValidationMessage For="() => VM.MWidget.ReadHeader" class="text-danger"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <CustomLabel TItem="MsgWidget" aspfor="@nameof(MsgWidget.ReadMessage)" CssClass="control-label"></CustomLabel>
+        <InputCheckbox @bind-Value="VM.MWidget.ReadMessage"></InputCheckbox>
+        <ValidationMessage For="() => VM.MWidget.ReadMessage" class="text-danger"></ValidationMessage>
+    </div>
+    <div class="form-group">
+
+        <CustomLabel TItem="MsgWidget" aspfor="@nameof(MsgWidget.UserID)" CssClass="control-label"></CustomLabel>
+        <InputText @bind-Value="VM.MWidget.UserID" class="form-control" readonly></InputText>
+        <ValidationMessage For="() => VM.MWidget.UserID" class="text-danger"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <CustomLabel TItem="MsgWidget" aspfor="@nameof(MsgWidget.Url)" CssClass="control-label"></CustomLabel>
+        <InputText @bind-Value="VM.MWidget.Url" class="form-control" readonly></InputText>
+        <ValidationMessage For="() => VM.MWidget.Url" class="text-danger"></ValidationMessage>
+    </div>
+
+    <div class="form-group" style="border:thick">
+
+
+        <div class="form-group">
+            <input name="Animation" type="file" @bind="soundPath">
+        </div>
+        <div class="form-group">
+            <input name="Sound" type="file" @bind="soundPath">
+        </div>
+
+        <button class="btn btn-primary" type="button"
+                @onclick="AddContent">
+            Add
+        </button>
+
+
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <DisplayName TItem="MsgWidgetContent" aspfor="@nameof(MsgWidgetContent.Sound)" CssClass="control-label"></DisplayName>
+                </th>
+                <th>
+                    <CustomLabel TItem="MsgWidgetContent" aspfor="@nameof(MsgWidgetContent.Amination)" CssClass="control-label"></CustomLabel>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in VM.MsgWidgetContent)
+            {
+                <tr>
+                    <td>
+                        @item.Sound.Name;
+                    </td>
+                    <td>
+                        @item.Amination.Name;
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+
+    </div>
+</EditForm>
+
+
+@*<form asp-action="Create" >
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="MsgWidget.Name" class="control-label"></label>
+            <input asp-for="MsgWidget.Name" class="form-control" />
+            <span asp-validation-for="MsgWidget.Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="MsgWidget.HeaderText" class="control-label"></label>
+            <input asp-for="MsgWidget.HeaderText" class="form-control" />
+            <span asp-validation-for="MsgWidget.HeaderText" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="MsgWidget.RandomContent" class="control-label"></label>
+            <input asp-for="MsgWidget.RandomContent" class="form-control" type="checkbox" />
+            <span asp-validation-for="MsgWidget.RandomContent" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="MsgWidget.ReadHeader" class="control-label"></label>
+            <input asp-for="MsgWidget.ReadHeader" class="form-control" type="checkbox" />
+            <span asp-validation-for="MsgWidget.ReadHeader" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="MsgWidget.ReadMessage" class="control-label"></label>
+            <input asp-for="MsgWidget.ReadMessage" class="form-control" type="checkbox" />
+            <span asp-validation-for="MsgWidget.ReadMessage" class="text-danger"></span>
+        </div>
+        <div class="form-group" style="display:none">
+            <label asp-for="MsgWidget.UserID" class="control-label"></label>
+            <select asp-for="MsgWidget.UserID" class="form-control" asp-items="ViewBag.UserID" readonly></select>
+        </div>
+
+        <div class="form-group" style="display:none">
+            <label asp-for="MsgWidget.Url" class="control-label"></label>
+            <input asp-for="MsgWidget.Url" class="form-control" />
+            <span asp-validation-for="MsgWidget.Url" class="text-danger"></span>
+        </div>
+
+        <div class="form-group" style="border:thick">
+
+
+            <div class="form-group">
+                <input name="Animation" type="file" @bind="soundPath">
+            </div>
+            <div class="form-group">
+                <input name="Sound" type="file" @bind="soundPath">
+            </div>
+
+            <button class="btn btn-primary" type="button"
+                    @onclick="AddContent">
+                Add
+            </button>
+
+            @code {
+
+                private string foooo = "";
+
+                private string animationPath;
+
+                private string soundPath;
+
+                [Parameter]
+                public string Foo { get; set; }
+
+                [Parameter]
+                public MsgWidgetViewModel VM { get; set; }
+
+
+                private async Task AddContent()
+                {
+                    var animation = new UploadFile() { Name = "Test Anim" };
+
+                    var sound = new UploadFile() { Name = "Test Sound" };
+
+                    var foo = new MsgWidgetContent();
+                    foo.Amination = animation;
+                    foo.Sound = sound;
+
+                    VM.MsgWidgetContent.Add(foo);
+                }
+            }
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Pictures
+                    </th>
+                    <th>
+                        Sound
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in VM.MsgWidgetContent)
+                {
+                    <tr>
+                        <td>
+                            @item.Sound.Name;
+                        </td>
+                        <td>
+                            @item.Amination.Name;
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <button type="button" asp-action="TEST"> TEST</button>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </form>*@
+
+
+
+

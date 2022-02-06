@@ -1,0 +1,125 @@
+﻿@using DIPLOMA.Views.Razor
+@using DIPLOMA.Services
+@using Microsoft.JSInterop
+@using Microsoft.AspNetCore.Components
+
+
+@inject DIPLOMA.Services.IRefreshModelService refreshModelService
+@inject IJSRuntime JsRuntime
+
+@model DIPLOMA.Models.ViewModels.MsgWidgetViewModel
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@functions{
+    private void RefreshMe(string foo)
+    {
+        //return "Hello";
+        //await JsRuntime.InvokeAsync("alert", "HEllo!");
+    }
+}
+
+
+<h1>Create</h1>
+
+
+
+<h4>@Model.MWidget.UserID</h4>
+<h4>@Model.MWidget.HeaderText</h4>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <component type="typeof(MsgWidgetContentComponent)" render-mode="ServerPrerendered"
+                   param-Foo="@Model.MWidget.UserID"
+                   param-VM="@Model"
+                   param-MWidget="@Model.MWidget"/>
+        @*<form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="MsgWidget.Name" class="control-label"></label>
+                    <input asp-for="MsgWidget.Name" class="form-control" />
+                    <span asp-validation-for="MsgWidget.Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MsgWidget.HeaderText" class="control-label"></label>
+                    <input asp-for="MsgWidget.HeaderText" class="form-control" />
+                    <span asp-validation-for="MsgWidget.HeaderText" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MsgWidget.RandomContent" class="control-label"></label>
+                    <input asp-for="MsgWidget.RandomContent" class="form-control" type="checkbox" />
+                    <span asp-validation-for="MsgWidget.RandomContent" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MsgWidget.ReadHeader" class="control-label"></label>
+                    <input asp-for="MsgWidget.ReadHeader" class="form-control" type="checkbox" />
+                    <span asp-validation-for="MsgWidget.ReadHeader" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MsgWidget.ReadMessage" class="control-label"></label>
+                    <input asp-for="MsgWidget.ReadMessage" class="form-control" type="checkbox" />
+                    <span asp-validation-for="MsgWidget.ReadMessage" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="display:none">
+                    <label asp-for="MsgWidget.UserID" class="control-label"></label>
+                    <select asp-for="MsgWidget.UserID" class="form-control" asp-items="ViewBag.UserID" readonly></select>
+                </div>
+
+                <div class="form-group" style="display:none">
+                    <label asp-for="MsgWidget.Url" class="control-label"></label>
+                    <input asp-for="MsgWidget.Url" class="form-control" />
+                    <span asp-validation-for="MsgWidget.Url" class="text-danger"></span>
+                </div>
+
+
+                <div class="form-group" style="border:thick">
+                    <component type="typeof(MsgWidgetContentComponent)" render-mode="ServerPrerendered"
+                               param-Foo="@Model.Foo"
+                               param-VM="@Model" />
+
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Pictures
+                            </th>
+                            <th>
+                                Sound
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.MsgWidgetContent)
+                        {
+                            <tr>
+                                <td>
+                                    @item.Sound.Name;
+                                </td>
+                                <td>
+                                    @item.Amination.Name;
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <button type="button" asp-action="TEST"> TEST</button>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>*@
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

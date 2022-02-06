@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>aspnet-DIPLOMA-8B33AA6C-59BC-4323-992C-DB60D5E862FD</UserSecretsId>
+    <CopyRefAssembliesToPublishDirectory>false</CopyRefAssembliesToPublishDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20220110075607_renameColumn.cs" />
+    <Compile Remove="Data\Migrations\20220110075607_renameColumn.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220111093130_AddMsgWidget.cs" />
+    <Compile Remove="Data\Migrations\20220111093130_AddMsgWidget.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220111095024_AlterMsgWidget.cs" />
+    <Compile Remove="Data\Migrations\20220111095024_AlterMsgWidget.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220111095528_AddMsgWidget2.cs" />
+    <Compile Remove="Data\Migrations\20220111095528_AddMsgWidget2.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.22" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.22" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.21">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.22" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+    <PackageReference Include="System.Linq.Dynamic" Version="1.0.8" />
+  </ItemGroup>
+
+</Project>

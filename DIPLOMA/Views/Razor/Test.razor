@@ -1,0 +1,30 @@
+﻿
+<h3>Test</h3>
+
+<button type="button" @onclick="TestMethod">
+    TEst
+</button>
+@code {
+
+    private string _value;
+
+    [Parameter]
+    public string Foo
+    {
+        get => _value;
+        set
+        {
+            if (_value == value) return;
+            _value = value;
+            BindingValueChanged.Refresh(value);
+        }
+    }
+
+    [Parameter]
+    public DIPLOMA.Services.IRefreshModelService BindingValueChanged { get; set; }
+
+    public void TestMethod()
+    {
+        Foo = "YEs it worcked)";
+    }
+}
