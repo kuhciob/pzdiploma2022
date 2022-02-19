@@ -53,9 +53,9 @@ namespace DIPLOMA.Data
                     .HasForeignKey(d => d.SoundFileId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
 
-                entity.HasOne(d => d.Amination)
+                entity.HasOne(d => d.Animation)
                     .WithMany(p => p.MsgWidgetContentAnimation)
-                    .HasForeignKey(d => d.AminationFileId)
+                    .HasForeignKey(d => d.AnimationFileId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
 
             });

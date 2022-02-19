@@ -41,10 +41,7 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Url)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
+                @Html.DisplayNameFor(model => model.ID)
             </th>
             <th></th>
         </tr>
@@ -80,15 +77,13 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Url)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
+                @Html.Raw($"{new string(item.ID.ToString().Take(4).ToArray())}...")
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a> |
+                <a asp-action="Display" asp-route-id="@item.ID">Display</a>
             </td>
         </tr>
 }

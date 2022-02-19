@@ -45,6 +45,7 @@ namespace DIPLOMA
             services.AddServerSideBlazor();
             services.AddSignalR();
             services.AddScoped<IRefreshModelService, RefreshModelService>();
+            services.AddScoped<DonateHub>();
 
         }
 

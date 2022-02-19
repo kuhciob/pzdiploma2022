@@ -1,4 +1,4 @@
-﻿@model DIPLOMA.Models.MsgWidget
+﻿@model DIPLOMA.Models.ViewModels.MsgWidgetViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -11,75 +11,116 @@
     <h4>MsgWidget</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MinAmt)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MWidget.MinAmt)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MinAmt)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MWidget.MinAmt)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MaxAmt)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MWidget.MaxAmt)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MaxAmt)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MWidget.MaxAmt)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HeaderText)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MWidget.HeaderText)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HeaderText)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MWidget.HeaderText)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MaxSymbols)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MWidget.MaxSymbols)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MaxSymbols)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MWidget.MaxSymbols)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DisplayTimeSec)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MWidget.DisplayTimeSec)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DisplayTimeSec)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MWidget.DisplayTimeSec)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RandomContent)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MWidget.RandomContent)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RandomContent)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MWidget.RandomContent)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReadHeader)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MWidget.ReadHeader)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReadHeader)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MWidget.ReadHeader)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReadMessage)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MWidget.ReadMessage)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReadMessage)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MWidget.ReadMessage)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MWidget.Name)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MWidget.Name)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Url)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MWidget.DisplayUrl)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Url)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MWidget.DisplayUrl)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.Id)
-        </dd>
+
+        <table class="table" id="ContentTable">
+            <thead>
+                <tr>
+                    <th>
+                        Content
+                    </th>
+
+                    <th>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.MsgWidgetContent.Count; i++)
+                {
+                    <tr id="contenttr-@i">
+                        <td>
+                            <div class="form-group">
+
+                                <img id="Animation" src="@Model.MsgWidgetContent[i].AnimSrc" alt="@Model.MsgWidgetContent[i].Animation.Name" class="img-fluid"
+                                     height="100" width="100" class="form-control">
+
+                                @if (Model.MsgWidgetContent[i].Sound != null && Model.MsgWidgetContent[i].Sound.Data != null)
+                                {
+                                    <input asp-for="MsgWidgetContent[i].Sound.Name" class="form-control" accept="audio/*" disabled />
+                                    <audio controls preload='none' >
+                                        <source src="@Url.Action("LoadAudio", Model.MsgWidgetContent[i].Sound.Data)"/>
+                                    </audio>
+                                }
+
+                            </div>
+
+                            @*<input asp-for="AnimFiles[i]" type="file">*@
+                        </td>
+
+                        <td>
+
+
+
+
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.MWidget.ID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

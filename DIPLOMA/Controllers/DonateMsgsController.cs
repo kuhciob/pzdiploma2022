@@ -65,11 +65,12 @@ namespace DIPLOMA.Controllers
                 //donateMsg.Date = DateTime.Now;
                 _context.Add(donateMsg);
                 await _context.SaveChangesAsync();
+                await _donateHub.Clients.All.SendAsync("ReceiveMessage", donateMsg);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", donateMsg.UserID);
             
-            await _donateHub.Clients.All.SendAsync("ReceiveMessage", donateMsg);
+            
 
             return View(donateMsg);
         }

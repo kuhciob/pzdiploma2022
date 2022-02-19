@@ -21,6 +21,9 @@ namespace DIPLOMA.Models
         public string DonatorName { get; set; }
         [Display(Name = "Message")]
         public string Message { get; set; }
+        [Display(Name = "Read")]
+        public bool Read { get; set; }
+
 
         public ApplicationUser User { get; set; }
     }

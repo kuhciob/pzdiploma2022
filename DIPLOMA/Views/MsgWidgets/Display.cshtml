@@ -1,0 +1,61 @@
+﻿@model DIPLOMA.Models.MsgWidget
+@using System.Linq
+ 
+@{
+    List<string> animations = Model.MsgWidgetContent.
+        Select(m => String.Format("data:image/gif;base64,{0}", Convert.ToBase64String(m.Animation.Data))).
+        ToList();
+}
+
+<div>
+    <h4>DonateMsg</h4>
+    <hr />
+    <dl class="row" id="donate" style="display:none">
+        <dd class="col-sm-10">
+            <h2 id="DonatorName"></h2>
+        </dd>
+        <dd class="col-sm-10">
+            <h2 id="Amount"></h2>
+        </dd>
+        <dd class="col-sm-10">
+            <h2 id="Message"></h2>
+        </dd>
+        <dd class="col-sm-10">
+            <img id="Animation" src="" alt="" class="img-fluid">
+        </dd>
+    </dl>
+</div>
+<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+<script>
+
+    var pageModel  = @Html.Raw(Json.Serialize(@Model));
+    var animationList = @Html.Raw(Json.Serialize(animations));
+
+    const hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl("/donates/@Model.User")
+        .build();
+
+    // получение сообщения от сервера
+    hubConnection.on('ReceiveMessage', function (message) {
+
+        console.log(pageModel);
+        console.log(animationList);
+
+        document.getElementById("DonatorName").value = donate.donatorName;
+        document.getElementById("Amount").value = donate.amount;
+        document.getElementById("Message").value = donate.message;
+
+        if (pageModel.RandomContent) {
+
+        }
+        document.getElementById("Animation").src =
+
+            document.getElementById("donate").style.display = 'block';
+
+            setTimeout(function () {
+                document.getElementById("donate").style.display = 'none';
+            }, 5000);
+
+    });
+    hubConnection.start();
+</script>

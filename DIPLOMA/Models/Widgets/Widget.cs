@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -19,11 +20,18 @@ namespace DIPLOMA.Models
 
         public string UserID { get; set; }
         [Display(Name = "Name")]
+        [Required]
         [MaxLength(50)]
         public string Name { get; set; }
+
+        //SAVE RELATIVE URL
         [Display(Name = "Url")]
         [MaxLength(2000)]
         public string Url { get; set; }
+        [Display(Name = "Url")]
+        [MaxLength(2000)]
+        [NotMapped]
+        public string DisplayUrl { get; set; }
         [Display(Name = "User")]
         public ApplicationUser User { get; set; }
     }
