@@ -1,15 +1,16 @@
-﻿@model DIPLOMA.Models.MsgWidget
+﻿
+@model DIPLOMA.Models.ViewModels.DisplayMsgViewModel
 @using System.Linq
- 
-@{
-    List<string> animations = Model.MsgWidgetContent.
-        Select(m => String.Format("data:image/gif;base64,{0}", Convert.ToBase64String(m.Animation.Data))).
-        ToList();
-}
 
+@{
+    Layout = "~/Views/Shared/_DisplayDonateLayout.cshtml";
+
+    bool randomContent = Model.MWidget.RandomContent;
+    int contentIndx = 0;
+    Random random = new Random();
+
+}
 <div>
-    <h4>DonateMsg</h4>
-    <hr />
     <dl class="row" id="donate" style="display:none">
         <dd class="col-sm-10">
             <h2 id="DonatorName"></h2>
@@ -28,27 +29,22 @@
 <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
 <script>
 
-    var pageModel  = @Html.Raw(Json.Serialize(@Model));
-    var animationList = @Html.Raw(Json.Serialize(animations));
 
     const hubConnection = new signalR.HubConnectionBuilder()
-        .withUrl("/donates/@Model.User")
+        .withUrl("/donates")
+        .withAutomaticReconnect()
         .build();
 
-    // получение сообщения от сервера
+    // Get message from hub
     hubConnection.on('ReceiveMessage', function (message) {
-
-        console.log(pageModel);
-        console.log(animationList);
 
         document.getElementById("DonatorName").value = donate.donatorName;
         document.getElementById("Amount").value = donate.amount;
         document.getElementById("Message").value = donate.message;
 
-        if (pageModel.RandomContent) {
 
-        }
-        document.getElementById("Animation").src =
+        document.getElementById("Animation").src = @Html.Raw(Model.Content.ElementAt(randomContent ?
+            random.Next(0, Model.Content.Count) : (contentIndx - ((int)(contentIndx / Model.Content.Count) * Model.Content.Count))))
 
             document.getElementById("donate").style.display = 'block';
 
@@ -56,6 +52,18 @@
                 document.getElementById("donate").style.display = 'none';
             }, 5000);
 
-    });
+        });
     hubConnection.start();
+
+    var lockResolver;
+    if (navigator && navigator.locks && navigator.locks.request) {
+        const promise = new Promise((res) => {
+            lockResolver = res;
+        });
+
+        navigator.locks.request('unique_lock_name', { mode: "shared" }, () => {
+            return promise;
+        });
+    }
+
 </script>

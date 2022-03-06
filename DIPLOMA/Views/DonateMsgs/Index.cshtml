@@ -2,14 +2,10 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_PanelLayout.cshtml";
+    ViewData["ActivePage"] = DIPLOMA.Views.Panel.PanelNavPages.Messages;
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>

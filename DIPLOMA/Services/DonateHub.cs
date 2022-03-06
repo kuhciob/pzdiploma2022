@@ -11,7 +11,18 @@ namespace DIPLOMA.Services
     {
         public async Task SendMessage(DonateMsg message)
         {
-            await Clients.All.SendAsync("ReceiveMessage", message);
+            //await Clients.Group()
+            await Clients.User(message.UserID).SendAsync("ReceiveMessage", message);
+
+            //await Clients.Client(connectionId).SendAsync("ReceiveMessage", message);
         }
+        //public override Task OnConnectedAsync()
+        //{
+        //    string name = Context.
+        //    Groups.AddToGroupAsync(Context.ConnectionId, name);
+
+        //    return base.OnConnectedAsync();
+        //}
+        public string GetConnectionId() => Context.ConnectionId;
     }
 }

@@ -24,13 +24,13 @@ namespace DIPLOMA.Controllers
         }
 
         //// GET: DonateMsgs
-        //public async Task<IActionResult> Index()
-        //{
-        //    var applicationDbContext = _context.DonateMsg.Include(d => d.User);
-        //    return View(await applicationDbContext.ToListAsync());
-        //}
+        public async Task<IActionResult> Index()
+        {
+            var applicationDbContext = _context.DonateMsg.Include(d => d.User);
+            return View(await applicationDbContext.ToListAsync());
+        }
 
-        // GET: DonateMsgs/Donate/5
+        // GET: Donate/lvasuk
         [HttpGet("Donate/{username}")]
         public async Task<IActionResult> Create(string username)
         {
@@ -58,7 +58,7 @@ namespace DIPLOMA.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserID,Amount,DonatorName,Message,Date")] DonateMsg donateMsg)
+        public async Task<IActionResult> Create([Bind("UserID,Amount,DonatorName,Message")] DonateMsg donateMsg)
         {
             if (ModelState.IsValid)
             {
@@ -92,20 +92,20 @@ namespace DIPLOMA.Controllers
 
             return View(donate);
         }
-        [HttpGet("Donates/{userid}")]
-        public async Task<IActionResult> Show(string userid)
-        {
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == userid);
+        //[HttpGet("Donates/{userid}")]
+        //public async Task<IActionResult> Show(string userid)
+        //{
+        //    var user = await _context.Users
+        //        .FirstOrDefaultAsync(m => m.Id == userid);
 
-            if (user == null)
-            {
-                return NotFound();
-            }
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", userid);
+        //    if (user == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", userid);
 
-            return View(new DonateMsg() { UserID = userid });
-        }
+        //    return View(new DonateMsg() { UserID = userid });
+        //}
         // GET: DonateMsgs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {

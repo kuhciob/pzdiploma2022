@@ -1,4 +1,5 @@
 ﻿using DIPLOMA.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,6 +15,7 @@ namespace DIPLOMA.Data
             : base(options)
         {
         }
+      
         public DbSet<DIPLOMA.Models.DonateMsg> DonateMsg { get; set; }
         public DbSet<DIPLOMA.Models.MsgWidget> MsgWidget { get; set; }
         public DbSet<DIPLOMA.Models.MsgWidgetContent> MsgWidgetContent { get; set; }
@@ -92,9 +94,10 @@ namespace DIPLOMA.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__MsgWidget_UserID");
 
-                entity.HasMany(e => e.MsgWidgetContent).
-                    WithOne(e => e.MsgWidget)
-                    .HasForeignKey(e => e.MsgWidgetID);
+                entity.HasMany<MsgWidgetContent>(e => e.MsgWidgetContent).
+                    WithOne(e => e.MsgWidget).
+                    HasForeignKey(e => e.MsgWidgetID).
+                    OnDelete(DeleteBehavior.Cascade);
             });
         }
 

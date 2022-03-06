@@ -1,24 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DIPLOMA.Data;
+using DIPLOMA.Models;
+using DIPLOMA.Models.ViewModels;
+using DIPLOMA.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using DIPLOMA.Data;
-using DIPLOMA.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using DIPLOMA.Models.ViewModels;
-using Microsoft.AspNetCore.Components.Forms;
-using System.Net.Http;
-using System.Net;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Http;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SignalR;
-using DIPLOMA.Services;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DIPLOMA.Controllers
 {
@@ -61,12 +57,23 @@ namespace DIPLOMA.Controllers
                 .ThenInclude(m => m.Sound)
                 .FirstOrDefaultAsync(m => m.ID == id);
 
+            DisplayMsgViewModel displayMsgViewModel = new DisplayMsgViewModel();
+            displayMsgViewModel.MWidget = msgWidget;
+            displayMsgViewModel.Content = new List<MsgWidgetContentViewModel>();
+
+            foreach (var item in msgWidget.MsgWidgetContent)
+            {
+                MsgWidgetContentViewModel msgVM = new MsgWidgetContentViewModel();
+                msgVM.AnimSrc = String.Format("data:image/gif;base64,{0}",
+                    Convert.ToBase64String(item.Animation.Data));
+                displayMsgViewModel.Content.Add(msgVM);
+            }
+
             if (msgWidget == null)
             {
                 return NotFound();
             }
-
-            return View(msgWidget);
+            return View(displayMsgViewModel);
         }
         public ActionResult LoadAudio(byte[] audioBytes)
         {
@@ -89,7 +96,7 @@ namespace DIPLOMA.Controllers
                 .ThenInclude(m => m.Sound)
                 .FirstOrDefaultAsync(m => m.ID == id);
             msgWidget.DisplayUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" +
-                    $"{msgWidget.Url}";
+                    $"{msgWidget.Url.Replace("Controller", "")}";
 
 
             if (msgWidget == null)

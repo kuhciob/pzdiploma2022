@@ -78,13 +78,13 @@ namespace DIPLOMA.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, NickName = Input.Nickname };
+                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, NickName = Input.Nickname.ToLower() };
 
-                var existetUser = _userManager.Users.FirstOrDefault(user => user.NickName == Input.Nickname);
+                var existetUser = _userManager.Users.FirstOrDefault(user => user.NickName.ToLower() == Input.Nickname.ToLower());
 
                 if (existetUser != null)
                 {
-                    ModelState.AddModelError(string.Empty, $"Nickname '{Input.Nickname}' already exist.");
+                    ModelState.AddModelError(string.Empty, $"Nickname '{Input.Nickname.ToLower()}' already exist.");
                     return Page();
 
                 }

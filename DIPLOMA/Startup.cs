@@ -34,12 +34,15 @@ namespace DIPLOMA
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<ApplicationUser>(options => 
+            services.AddDefaultIdentity<ApplicationUser>(options =>
             {
                 options.User.RequireUniqueEmail = true;
                 options.SignIn.RequireConfirmedAccount = true;
-            })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            }).
+            AddEntityFrameworkStores<ApplicationDbContext>();
+            //AddRoles<IdentityRole>().
+            //AddDefaultTokenProviders(); 
+
             services.AddControllersWithViews().AddControllersAsServices();
             services.AddRazorPages();
             services.AddServerSideBlazor();
@@ -78,7 +81,9 @@ namespace DIPLOMA
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
                 endpoints.MapBlazorHub();
-                endpoints.MapHub<DonateHub>("/donates/{userID}");
+                //endpoints.MapHub<DonateHub>("/donates/{userID}");
+                endpoints.MapHub<DonateHub>("/donates");
+
 
             });
         }

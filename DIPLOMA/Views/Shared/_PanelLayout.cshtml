@@ -5,18 +5,18 @@
     }
     else
     {
-        Layout = "/Areas/Identity/Pages/_Layout.cshtml";
+        Layout = "~/Views/Shared/_Layout.cshtml";
     }
 }
 
 <div>
-
     <div class="row">
         <div class="col-md-3">
-            <a class="nav-link text-dark btn btn-sm btn-outline-secondary"
-               asp-area="" asp-controller="Panel" asp-action="Index" title="Manage">User Panel</a>
+            <a class="nav-link text-dark btn btn-sm btn-outline-secondary" 
+               asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Manage Account</a>
             <br>
-            <partial name="~/Areas/Identity/Pages/Account/Manage/_ManageNav.cshtml" />
+            <partial name="~/Views/Panel/Layout/_PanelNav.cshtml" />
+            
         </div>
         <div class="col-md-9">
             @RenderBody()

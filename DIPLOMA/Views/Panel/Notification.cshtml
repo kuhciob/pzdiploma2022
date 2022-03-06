@@ -1,0 +1,92 @@
+﻿@model IEnumerable<DIPLOMA.Models.MsgWidget>
+
+@{
+    Layout = "~/Views/Shared/_PanelLayout.cshtml";
+    ViewData["ActivePage"] = DIPLOMA.Views.Panel.PanelNavPages.Notification;
+
+    ViewData["Title"] = "Notification";
+}
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MinAmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxAmt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HeaderText)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxSymbols)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DisplayTimeSec)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RandomContent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReadHeader)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReadMessage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ID)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MinAmt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaxAmt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HeaderText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaxSymbols)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DisplayTimeSec)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RandomContent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReadHeader)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReadMessage)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.Raw($"{new string(item.ID.ToString().Take(4).ToArray())}...")
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a> |
+                    <a asp-action="Display" asp-route-id="@item.ID">Display</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
