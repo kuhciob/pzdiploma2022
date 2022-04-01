@@ -1,13 +1,19 @@
 ﻿@using  DIPLOMA.Views.Panel
 <ul class="nav nav-pills flex-column">
+    <li class="nav-item font-weight-bold">
+        <hr />
+        <span class="navbar-text">General</span>
+    </li>
     <li class="nav-item">
         <a class="nav-link @PanelNavPages.IndexNavClass(ViewContext)" asp-area="" asp-controller="Panel" asp-action="Index">Overview</a>
     </li>
     <li class="nav-item">
         <a class="nav-link @PanelNavPages.MessagesNavClass(ViewContext)" asp-area="" asp-controller="DonateMsgs" asp-action="Index">Messages</a>
     </li>
-    <li class="nav-item">
-        <span class="nav-link">Widjets</span>
+
+    <li class="nav-item font-weight-bold">
+        <hr />
+        <span class="navbar-text">Widgets</span>
     </li>
     <li class="nav-item">
         <a class="nav-link @PanelNavPages.NotificationNavClass(ViewContext)" asp-area="" asp-controller="MsgWidgets" asp-action="Index">Notification</a>
@@ -16,6 +22,8 @@
         <a class="nav-link @PanelNavPages.FundraisingNavClass(ViewContext)" asp-area="" asp-controller="Panel" asp-action="Fundraising">Fundraising</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link @PanelNavPages.StatisticNavClass(ViewContext)" asp-area="" asp-controller="Panel" asp-action="Statistic">Statistic</a>
+        <a class="nav-link @PanelNavPages.StatisticNavClass(ViewContext)" asp-area="" asp-controller="StatisticWidgets" asp-action="Index">Statistic</a>
+        <hr />
     </li>
+
 </ul>

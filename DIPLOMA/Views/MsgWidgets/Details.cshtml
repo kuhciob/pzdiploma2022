@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_PanelLayout.cshtml";
-    ViewData["ActivePage"] = DIPLOMA.Views.Panel.PanelNavPages.Index;
+    ViewData["ActivePage"] = DIPLOMA.Views.Panel.PanelNavPages.Notification;
 }
 
 <h1>Widget details</h1>
@@ -12,7 +12,7 @@
 
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
+        @*<dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.MWidget.MinAmt)
         </dt>
         <dd class="col-sm-10">
@@ -23,7 +23,7 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.MWidget.MaxAmt)
-        </dd>
+        </dd>*@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.MWidget.HeaderText)
         </dt>
@@ -70,7 +70,8 @@
             @Html.DisplayNameFor(model => model.MWidget.DisplayUrl)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MWidget.DisplayUrl)
+            <a asp-action="Display" asp-route-id="@Model.MWidget.ID">@Html.DisplayFor(model => model.MWidget.DisplayUrl)</a>
+            
         </dd>
 
         <table class="table" id="ContentTable">
@@ -86,22 +87,33 @@
                 </tr>
             </thead>
             <tbody>
-                @for (int i = 0; i < Model.MsgWidgetContent.Count; i++)
+                @for (int i = 0; i < Model.VMMsgWidgetContent.Count; i++)
                 {
                     <tr id="contenttr-@i">
                         <td>
                             <div class="form-group">
 
-                                <img id="Animation" src="@Model.MsgWidgetContent[i].AnimSrc" alt="@Model.MsgWidgetContent[i].Animation.Name" class="img-fluid"
-                                     height="100" width="100" class="form-control">
+                                <div class="row">
+                                    <div class="col">
+                                        <label asp-for="VMMsgWidgetContent[i].AnimFormFile" class="control-label"></label>
+                                    </div>
+                                    <div class="col">
+                                        <label asp-for="VMMsgWidgetContent[i].SoundFormFile" class="control-label"></label>
+                                    </div>
+                                </div>
 
-                                @if (Model.MsgWidgetContent[i].Sound != null && Model.MsgWidgetContent[i].Sound.Data != null)
-                                {
-                                    <input asp-for="MsgWidgetContent[i].Sound.Name" class="form-control" accept="audio/*" disabled />
-                                    <audio controls preload='none' >
-                                        <source src="@Url.Action("LoadAudio", Model.MsgWidgetContent[i].Sound.Data)"/>
-                                    </audio>
-                                }
+                                <div class="row">
+                                    <div class="col">
+                                        <img id="output-@i" width="100" class="control-label" src="@Model.VMMsgWidgetContent[i].AnimSrc" />
+
+                                    </div>
+                                    <div class="col">
+                                        <audio id="audio-@i" controls preload='none'>
+                                            <source id="audiosrc-@i" src="@Model.VMMsgWidgetContent[i].SoundSrc" />
+                                        </audio>
+                                    </div>
+                                </div>
+
 
                             </div>
 
@@ -109,10 +121,6 @@
                         </td>
 
                         <td>
-
-
-
-
                         </td>
                     </tr>
                 }

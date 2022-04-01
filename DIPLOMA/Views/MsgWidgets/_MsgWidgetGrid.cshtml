@@ -1,0 +1,122 @@
+﻿@model DIPLOMA.Models.ViewModels.MsgWidgetViewModel
+<table class="table" id="ContentTable">
+    <thead>
+        <tr>
+            <th>
+                Content
+            </th>
+
+            <th>
+                <button id="btnadd-base" type="button" class="btn btn-sm btn-secondary form-control invisible " onclick="AddItem(this)">Add</button>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.VMMsgWidgetContent.Count; i++)
+        {
+            <tr id="contenttr-@i">
+                <td>
+                    <div class="form-group">
+                        <input type="hidden" asp-for="VMMsgWidgetContent[i].ID" />
+                        <input type="hidden" asp-for="VMMsgWidgetContent[i].AnimationFileId" class="form-control" />
+                        <input type="hidden" asp-for="VMMsgWidgetContent[i].MsgWidgetID" class="form-control" />
+                        <input type="hidden" asp-for="VMMsgWidgetContent[i].SoundFileId" class="form-control" />
+
+                        <span asp-validation-for="VMMsgWidgetContent[i].MsgWidgetID" class="text-danger"></span>
+                        <span asp-validation-for="VMMsgWidgetContent[i].AnimationFileId" class="text-danger"></span>
+                        <span asp-validation-for="VMMsgWidgetContent[i].SoundFileId" class="text-danger"></span>
+
+                        <div class="row">
+                            <div class="col">
+                                <label asp-for="VMMsgWidgetContent[i].AnimFormFile" class="control-label"></label>
+                            </div>
+                            <div class="col">
+                                <label asp-for="VMMsgWidgetContent[i].SoundFormFile" class="control-label"></label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <img id="output-@i" width="100" class="control-label" src="@Model.VMMsgWidgetContent[i].AnimSrc" />
+
+                            </div>
+                            <div class="col">
+                                <audio id="audio-@i" controls preload='none'>
+                                    <source id="audiosrc-@i" src="@Model.VMMsgWidgetContent[i].SoundSrc" />
+                                </audio>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <input asp-for="VMMsgWidgetContent[i].AnimFormFile" class="form-control-file"
+                                       accept="image/*" onchange="loadImg(event, @i)" />
+                                <span asp-validation-for="VMMsgWidgetContent[i].AnimFormFile" class="text-danger"></span>
+                            </div>
+                            <div class="col">
+                                <input asp-for="VMMsgWidgetContent[i].SoundFormFile" accept="audio/*"
+                                       class="form-control-file" onchange="loadSound(event, @i)" />
+                                <span asp-validation-for="VMMsgWidgetContent[i].SoundFormFile" class="text-danger"></span>
+                            </div>
+                        </div>
+
+
+
+                        <script>
+                            var loadImg = function (event, i) {
+                                var image = document.getElementById('output-' + i);
+                                image.src = URL.createObjectURL(event.target.files[0]);
+                            };
+                            var loadSound = function (event, i) {
+                                var audio = document.getElementById('audio-' + i);
+
+                                document.getElementById('audiosrc-' + i).remove();
+                                let newsource = document.createElement('source');
+                                newsource.id = 'audiosrc-' + i.toString();
+                                newsource.src = URL.createObjectURL(event.target.files[0]);
+                                console.log(newsource.src);
+                                audio.appendChild(newsource);
+                            };
+                        </script>
+                    </div>
+                    <div class="form-group">
+
+                    </div>
+                    @*<input asp-for="AnimFiles[i]" type="file">*@
+                </td>
+
+                <td>
+                    <div class="form-group">
+
+                        <button id="btnremove-@i" type="button" class="btn btn-sm btn-danger  visible" onclick="DeleteItem(this)">Delete</button>
+                        <button id="btnadd-@i" type="button" class="btn btn-sm btn-secondary invisible " onclick="AddItem(this)">Add</button>
+
+                        @if (true)
+                        {
+
+                        }
+                        else
+                        {
+                            <button id="btnremove-@i" type="button" class="btn btn-sm btn-danger  visible" onclick="DeleteItem(this)">Delete</button>
+                            <button id="btnadd-@i" type="button" class="btn btn-sm btn-secondary visible " onclick="AddItem(this)">Add</button>
+
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+
+
+    </tbody>
+</table>
+<input type="hidden" id="hdnLastIndex" value="@Model.VMMsgWidgetContent.Count" />
+<script>
+    $(document).ready(function () {
+        RepaintRowsWidgets(document.getElementById('ContentTable')
+            .getElementsByTagName('tbody')[0]
+            .getElementsByTagName('tr'));
+    })
+
+</script>
+<script src="~/js/MsgWidget/MsgWidgetContentGrid.js"></script>

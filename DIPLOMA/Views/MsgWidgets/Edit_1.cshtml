@@ -1,0 +1,74 @@
+﻿@model DIPLOMA.Models.MsgWidget
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_PanelLayout.cshtml";
+    ViewData["ActivePage"] = DIPLOMA.Views.Panel.PanelNavPages.Index;
+}
+
+<h1>Edit</h1>
+
+<h4>MsgWidget</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group">
+                <label asp-for="HeaderText" class="control-label"></label>
+                <input asp-for="HeaderText" class="form-control" />
+                <span asp-validation-for="HeaderText" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MaxSymbols" class="control-label"></label>
+                <input asp-for="MaxSymbols" class="form-control" />
+                <span asp-validation-for="MaxSymbols" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DisplayTimeSec" class="control-label"></label>
+                <input asp-for="DisplayTimeSec" class="form-control" />
+                <span asp-validation-for="DisplayTimeSec" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RandomContent" class="control-label"></label>
+                <input asp-for="RandomContent" />
+                <span asp-validation-for="RandomContent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReadHeader" class="control-label"></label>
+                <input asp-for="ReadHeader" />
+                <span asp-validation-for="ReadHeader" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ReadMessage" class="control-label"></label>
+                <input asp-for="ReadMessage" />
+                <span asp-validation-for="ReadMessage" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="ID" />
+            @Html.HiddenFor(model => model.UserID)
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Url" class="control-label"></label>
+                <input asp-for="Url" class="form-control" readonly />
+                <span asp-validation-for="Url" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,4 +1,4 @@
-﻿@using DIPLOMA.Views.Razor
+﻿
 @using DIPLOMA.Services
 @using Microsoft.JSInterop
 @using Microsoft.AspNetCore.Components
@@ -7,15 +7,12 @@
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_PanelLayout.cshtml";
-    ViewData["ActivePage"] = DIPLOMA.Views.Panel.PanelNavPages.Index;
+    ViewData["ActivePage"] = DIPLOMA.Views.Panel.PanelNavPages.Notification;
 }
 
-<h1>Create</h1>
-
-<hr />
 
 <div class="row">
-    <div class="col-md-8">
+    <div class="col">
         @*<component type="typeof(MsgWidgetContentComponent)" render-mode="ServerPrerendered"
             param-UserID="@Model.MWidget.UserID"
             param-VM="@Model"
@@ -31,19 +28,19 @@
                 <label asp-for="MWidget.HeaderText" class="control-label"></label>
                 <input asp-for="MWidget.HeaderText" class="form-control" />
                 <small id="showUserText" class="form-text text-muted">
-                <div class="mt-2 mb-1">
-                    Доступні: 
-                    <u>{user}</u>
-                    <u>{amount}</u>
-                    <br>
-                    <strong>наприклад:</strong> '{user}' задонатив '{amount}' грн!
+                    <div class="mt-2 mb-1">
+                        Allowed :
+                        <u>{user}</u>
+                        <u>{amount}</u>
+                        <br>
+                        <strong>For example:</strong> {user} donate {amount}$
                     </div>
                 </small>
                 <span asp-validation-for="MWidget.HeaderText" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="MWidget.DisplayTimeSec" class="control-label"></label>
-                <input asp-for="MWidget.DisplayTimeSec" class="form-control" />
+                <input asp-for="MWidget.DisplayTimeSec" class="form-range" type="range" min="0" max="10"/>
                 <span asp-validation-for="MWidget.DisplayTimeSec" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -58,213 +55,15 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="MWidget.ReadHeader" class="control-label"></label>
-                <input asp-for="MWidget.ReadHeader" class="" type="checkbox" />
-                <span asp-validation-for="MWidget.ReadHeader" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="MWidget.ReadMessage" class="control-label"></label>
                 <input asp-for="MWidget.ReadMessage" class="" type="checkbox" />
                 <span asp-validation-for="MWidget.ReadMessage" class="text-danger"></span>
             </div>
 
             @Html.HiddenFor(model => model.MWidget.UserID)
-           
-            <table class="table" id="ContentTable">
-                <thead>
-                    <tr>
-                        <th>
-                            Content
-                        </th>
 
-                        <th>
+            @await Html.PartialAsync("~/Views/MsgWidgets/_MsgWidgetGrid.cshtml", Model)
 
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 0; i < Model.MsgWidgetContent.Count; i++)
-                    {
-                        <tr id="contenttr-@i">
-                            <td>
-                                <div class="form-group">
-                                    <label asp-for="MsgWidgetContent[i].AnimFormFile" class="control-label"></label>
-                                    <input asp-for="MsgWidgetContent[i].AnimFormFile" class="form-control"
-                                           accept="image/*" />
-                                    <span asp-validation-for="MsgWidgetContent[i].AnimFormFile" class="text-danger"></span>
-
-                                    <label asp-for="MsgWidgetContent[i].SoundFormFile" class="control-label"></label>
-                                    <input asp-for="MsgWidgetContent[i].SoundFormFile" class="form-control" accept="audio/*" />
-                                    <span asp-validation-for="MsgWidgetContent[i].SoundFormFile" class="text-danger"></span>
-
-
-                                </div>
-                                <div class="form-group">
-                                    <button id="btnadd-@i" type="button" class="btn btn-sm btn-secondary visible " onclick="AddItem(this)">Add</button>
-                                </div>
-                                @*<input asp-for="AnimFiles[i]" type="file">*@
-                            </td>
-
-                            <td>
-                                <div class="form-group">
-                                    <button id="btnremove-@i" type="button" class="btn btn-sm btn-danger invisible form-control" onclick="DeleteItem(this)">Delete</button>
-
-                                </div>
-
-
-
-
-                            </td>
-                        </tr>
-                    }
-
-                </tbody>
-            </table>
-            <input type="hidden" id="hdnLastIndex" value="0" />
-            <script>
-                function RepaintRows(rows) {
-                    for (let i = 0; i < rows.length; ++i) {
-
-                        let currRow = rows[i];
-                        let rowOuterHtml = currRow.outerHTML;
-                        let currRowNbr = currRow.id.replace("contenttr-", "")
-                        console.log(currRowNbr);
-
-                        let newLineNbr = i;
-
-                        rowOuterHtml = rowOuterHtml.replaceAll('_' + currRowNbr + '_', '_' + newLineNbr + '_');
-                        rowOuterHtml = rowOuterHtml.replaceAll('[' + currRowNbr + ']', '[' + newLineNbr + ']');
-                        rowOuterHtml = rowOuterHtml.replaceAll('-' + currRowNbr, '-' + newLineNbr);
-                        currRow.id = "contenttr-" + newLineNbr;
-
-                        currRow.innerHTML = rowOuterHtml;
-                        console.log(newLineNbr);
-
-                        console.log(currRow);
-                        document.getElementById('hdnLastIndex').value = newLineNbr;
-                    }
-                }
-                function RepaintRowString(rowstr, currRowNbr, newLineNbr) {
-                    if (rowstr) {
-                        rowstr = rowstr.replaceAll('_' + currRowNbr + '_', '_' + newLineNbr + '_');
-                        rowstr = rowstr.replaceAll('[' + currRowNbr + ']', '[' + newLineNbr + ']');
-                        rowstr = rowstr.replaceAll('-' + currRowNbr, '-' + newLineNbr);
-
-                    }
-                    return rowstr;
-                }
-                function RepaintRowsWidgets(rows) {
-                    for (let i = 0; i < rows.length; ++i) {
-
-                        let currRow = rows[i];
-                        let rowOuterHtml = currRow.outerHTML;
-                        let currRowNbr = currRow.id.replace("contenttr-", "")
-
-                        let newLineNbr = i;
-
-                        let allSubNodes = Array.from(currRow.getElementsByTagName("*"));
-
-                        for (let i = 0; i < allSubNodes.length; ++i) {
-
-                            let e = allSubNodes[i];
-
-                            e.id = RepaintRowString(e.id, currRowNbr, newLineNbr);
-                            e.name = RepaintRowString(e.name, currRowNbr, newLineNbr);
-
-
-                            let attr = e.getAttribute('for');
-                            if (attr) {
-                                console.log(attr);
-                                e.setAttribute("for", RepaintRowString(attr, currRowNbr, newLineNbr))
-                            }
-                            attr = e.getAttribute('data-valmsg-for');
-                            if (attr) {
-                                e.setAttribute('data-valmsg-for', RepaintRowString(attr, currRowNbr, newLineNbr))
-                            }
-
-
-                        }
-                        //rowOuterHtml = rowOuterHtml.replaceAll('_' + currRowNbr + '_', '_' + newLineNbr + '_');
-                        //rowOuterHtml = rowOuterHtml.replaceAll('[' + currRowNbr + ']', '[' + newLineNbr + ']');
-                        //rowOuterHtml = rowOuterHtml.replaceAll('-' + currRowNbr, '-' + newLineNbr);
-                        currRow.id = "contenttr-" + newLineNbr;
-
-                        //currRow.innerHTML = rowOuterHtml;
-                        console.log(newLineNbr);
-
-                        console.log(currRow);
-                        document.getElementById('hdnLastIndex').value = newLineNbr;
-                    }
-                }
-                function DeleteItem(btn) {
-                    $(btn).closest('tr').remove();
-
-                    let table = document.getElementById('ContentTable');
-                    let tbody = table.getElementsByTagName('tbody')[0];
-                    let rows = tbody.getElementsByTagName('tr');
-
-                    RepaintRowsWidgets(rows);
-
-                }
-                function AddItem(btn) {
-
-                    let table = document.getElementById('ContentTable');
-                    let rows = table.getElementsByTagName('tr');
-
-                    let rowOuterHtml = rows[rows.length - 1].outerHTML;
-
-                    let lastrowIdx = document.getElementById('hdnLastIndex').value;
-                    let nextrowIdx = eval(lastrowIdx) + 1;
-
-                    document.getElementById('hdnLastIndex').value = nextrowIdx;
-
-                    rowOuterHtml = rowOuterHtml.replaceAll('_' + lastrowIdx + '_', '_' + nextrowIdx + '_');
-                    rowOuterHtml = rowOuterHtml.replaceAll('[' + lastrowIdx + ']', '[' + nextrowIdx + ']');
-                    rowOuterHtml = rowOuterHtml.replaceAll('-' + lastrowIdx, '-' + nextrowIdx);
-
-                    let newRow = table.insertRow();
-                    newRow.id = "contenttr-" + nextrowIdx;
-                    newRow.innerHTML = rowOuterHtml;
-
-                    let btnAddID = btn.id;
-                    let btnDeleteid = btnAddID.replaceAll('btnadd', 'btnremove');
-
-                    let delbtn = document.getElementById(btnDeleteid);
-                    delbtn.classList.add("visible");
-                    delbtn.classList.remove("invisible");
-
-
-                    var addbtn = document.getElementById(btnAddID);
-                    addbtn.classList.remove("visible");
-                    addbtn.classList.add("invisible");
-
-                }
-
-                function ValidateSize(e) {
-                    var count = 1;
-                    var files = e.currentTarget.files; // puts all files into an array
-
-                    // call them as such; files[0].size will get you the file size of the 0th file
-                    for (var x in files) {
-
-                        var filesize = ((files[x].size / 1024) / 1024).toFixed(4); // MB
-
-                        if (files[x].name != "item" && typeof files[x].name != "undefined" && filesize <= 10) {
-
-                            if (count > 1) {
-
-                                approvedHTML += ", " + files[x].name;
-                            }
-                            else {
-
-                                approvedHTML += files[x].name;
-                            }
-
-                            count++;
-                        }
-                    }
-                }
-            </script>
 
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

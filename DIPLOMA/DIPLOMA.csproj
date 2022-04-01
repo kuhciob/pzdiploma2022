@@ -15,6 +15,18 @@
     <Compile Remove="Data\Migrations\20220111095024_AlterMsgWidget.Designer.cs" />
     <Compile Remove="Data\Migrations\20220111095528_AddMsgWidget2.cs" />
     <Compile Remove="Data\Migrations\20220111095528_AddMsgWidget2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220319202503_AddUploadFileDataset.cs" />
+    <Compile Remove="Data\Migrations\20220319202503_AddUploadFileDataset.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220319202725_AddUploadFileDataset.cs" />
+    <Compile Remove="Data\Migrations\20220319202725_AddUploadFileDataset.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220328190541_AddStatisticWidget.cs" />
+    <Compile Remove="Data\Migrations\20220328190541_AddStatisticWidget.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220328191951_AddStatisticWidget.cs" />
+    <Compile Remove="Data\Migrations\20220328191951_AddStatisticWidget.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220328192542_AddStatisticWidget.cs" />
+    <Compile Remove="Data\Migrations\20220328192542_AddStatisticWidget.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220329075231_AddStatisticWidget.cs" />
+    <Compile Remove="Data\Migrations\20220329075231_AddStatisticWidget.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +46,14 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.22" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
     <PackageReference Include="System.Linq.Dynamic" Version="1.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\MsgWidget\MsgWidgetContentGrid.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\Enums\" />
   </ItemGroup>
 
 </Project>

@@ -4,14 +4,16 @@ using DIPLOMA.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DIPLOMA.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220329143128_AddStatisticWidget")]
+    partial class AddStatisticWidget
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,7 +114,6 @@ namespace DIPLOMA.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DonatorName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Message")
@@ -257,9 +258,6 @@ namespace DIPLOMA.Data.Migrations
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("ID");
 
                     b.ToTable("StatWidgetDirectionType");
@@ -269,37 +267,33 @@ namespace DIPLOMA.Data.Migrations
                         {
                             ID = 1,
                             CD = "RL",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 842, DateTimeKind.Local).AddTicks(1065),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 161, DateTimeKind.Local).AddTicks(7198),
                             Description = "Right -> Left",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 842, DateTimeKind.Local).AddTicks(1132),
-                            Value = "left"
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 161, DateTimeKind.Local).AddTicks(7266)
                         },
                         new
                         {
                             ID = 2,
                             CD = "LR",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 842, DateTimeKind.Local).AddTicks(1762),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 161, DateTimeKind.Local).AddTicks(7308),
                             Description = "Left -> Right",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 842, DateTimeKind.Local).AddTicks(1781),
-                            Value = "right"
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 161, DateTimeKind.Local).AddTicks(7315)
                         },
                         new
                         {
                             ID = 3,
                             CD = "TB",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 842, DateTimeKind.Local).AddTicks(1802),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 161, DateTimeKind.Local).AddTicks(7322),
                             Description = "Top -> Bottom",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 842, DateTimeKind.Local).AddTicks(1808),
-                            Value = "down"
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 161, DateTimeKind.Local).AddTicks(7328)
                         },
                         new
                         {
                             ID = 4,
                             CD = "BT",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 842, DateTimeKind.Local).AddTicks(1815),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 161, DateTimeKind.Local).AddTicks(7334),
                             Description = "Bottom -> Top",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 842, DateTimeKind.Local).AddTicks(1820),
-                            Value = "up"
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 161, DateTimeKind.Local).AddTicks(7340)
                         });
                 });
 
@@ -335,25 +329,25 @@ namespace DIPLOMA.Data.Migrations
                         {
                             ID = 1,
                             CD = "LL",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 825, DateTimeKind.Local).AddTicks(6371),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 146, DateTimeKind.Local).AddTicks(2682),
                             Description = "List",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 832, DateTimeKind.Local).AddTicks(4692)
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 154, DateTimeKind.Local).AddTicks(1930)
                         },
                         new
                         {
                             ID = 2,
                             CD = "CL",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 832, DateTimeKind.Local).AddTicks(6841),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 154, DateTimeKind.Local).AddTicks(3473),
                             Description = "Сreeping line",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 832, DateTimeKind.Local).AddTicks(6891)
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 154, DateTimeKind.Local).AddTicks(3509)
                         },
                         new
                         {
                             ID = 3,
                             CD = "SL",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 832, DateTimeKind.Local).AddTicks(6934),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 154, DateTimeKind.Local).AddTicks(3553),
                             Description = "Slider",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 832, DateTimeKind.Local).AddTicks(6941)
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 154, DateTimeKind.Local).AddTicks(3561)
                         });
                 });
 
@@ -389,73 +383,73 @@ namespace DIPLOMA.Data.Migrations
                         {
                             ID = 1,
                             CD = "TD",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 839, DateTimeKind.Local).AddTicks(9893),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5713),
                             Description = "Today",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 839, DateTimeKind.Local).AddTicks(9972)
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5766)
                         },
                         new
                         {
                             ID = 2,
                             CD = "AT",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 840, DateTimeKind.Local).AddTicks(25),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5801),
                             Description = "All time",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 840, DateTimeKind.Local).AddTicks(31)
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5807)
                         },
                         new
                         {
                             ID = 3,
                             CD = "TW",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 840, DateTimeKind.Local).AddTicks(38),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5814),
                             Description = "This week",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 840, DateTimeKind.Local).AddTicks(43)
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5820)
                         },
                         new
                         {
                             ID = 4,
                             CD = "7D",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 840, DateTimeKind.Local).AddTicks(49),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5827),
                             Description = "Last 7 days",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 840, DateTimeKind.Local).AddTicks(53)
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5834)
                         },
                         new
                         {
                             ID = 5,
-                            CD = "TM",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 840, DateTimeKind.Local).AddTicks(59),
-                            Description = "This month",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 840, DateTimeKind.Local).AddTicks(63)
+                            CD = "LM",
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5840),
+                            Description = "Last month",
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5847)
                         },
                         new
                         {
                             ID = 6,
                             CD = "30",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 840, DateTimeKind.Local).AddTicks(69),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5853),
                             Description = "Last 30 Days",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 840, DateTimeKind.Local).AddTicks(74)
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5859)
                         },
                         new
                         {
                             ID = 7,
                             CD = "TY",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 840, DateTimeKind.Local).AddTicks(80),
-                            Description = "This Year",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 840, DateTimeKind.Local).AddTicks(85)
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5866),
+                            Description = "ThisYear",
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5873)
                         },
                         new
                         {
                             ID = 8,
                             CD = "LY",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 840, DateTimeKind.Local).AddTicks(91),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5880),
                             Description = "Last Year",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 840, DateTimeKind.Local).AddTicks(96)
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5886)
                         },
                         new
                         {
                             ID = 9,
                             CD = "24",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 840, DateTimeKind.Local).AddTicks(100),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5892),
                             Description = "Last 24 hours",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 840, DateTimeKind.Local).AddTicks(106)
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 159, DateTimeKind.Local).AddTicks(5899)
                         });
                 });
 
@@ -491,25 +485,25 @@ namespace DIPLOMA.Data.Migrations
                         {
                             ID = 1,
                             CD = "TP",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 837, DateTimeKind.Local).AddTicks(2439),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 157, DateTimeKind.Local).AddTicks(7831),
                             Description = "Top",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 837, DateTimeKind.Local).AddTicks(2508)
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 157, DateTimeKind.Local).AddTicks(7895)
                         },
                         new
                         {
                             ID = 2,
                             CD = "LD",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 837, DateTimeKind.Local).AddTicks(2566),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 157, DateTimeKind.Local).AddTicks(7944),
                             Description = "Last Donater",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 837, DateTimeKind.Local).AddTicks(2573)
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 157, DateTimeKind.Local).AddTicks(7951)
                         },
                         new
                         {
                             ID = 3,
                             CD = "CA",
-                            CreatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 837, DateTimeKind.Local).AddTicks(2580),
+                            CreatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 157, DateTimeKind.Local).AddTicks(7958),
                             Description = "Collected  amount",
-                            UpdatedDate = new DateTime(2022, 3, 31, 15, 56, 30, 837, DateTimeKind.Local).AddTicks(2586)
+                            UpdatedDate = new DateTime(2022, 3, 29, 17, 31, 27, 157, DateTimeKind.Local).AddTicks(7964)
                         });
                 });
 

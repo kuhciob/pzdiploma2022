@@ -15,7 +15,7 @@ namespace DIPLOMA.Models.ViewModels
     public class MsgWidgetViewModel 
     {
         public MsgWidget MWidget { get; set; }
-        public List<MsgWidgetContent> MsgWidgetContent { get; set; }
+        public List<MsgWidgetContent> VMMsgWidgetContent { get; set; }
         //[Display(Name = "Anim")]
         //[NotMapped]
         //public List<FormUploadFiles> AnimFiles { get; set; }

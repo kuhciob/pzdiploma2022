@@ -9,6 +9,7 @@ namespace DIPLOMA.Services
 {
     public class DonateHub : Hub
     {
+        protected string _userID = "";
         public async Task SendMessage(DonateMsg message)
         {
             //await Clients.Group()
@@ -24,5 +25,15 @@ namespace DIPLOMA.Services
         //    return base.OnConnectedAsync();
         //}
         public string GetConnectionId() => Context.ConnectionId;
+
+        public override async Task OnConnectedAsync()
+        {
+            this._userID = Context.GetHttpContext().Request.Query["userid"];
+            this._userID = this._userID.Replace("\"", "");
+            this._userID = this._userID.Replace("\'", "");
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, this._userID);
+            await base.OnConnectedAsync();
+        }
     }
 }

@@ -1,0 +1,72 @@
+﻿@model IEnumerable<DIPLOMA.Models.StatisticWidget>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_PanelLayout.cshtml";
+    ViewData["ActivePage"] = DIPLOMA.Views.Panel.PanelNavPages.Statistic;
+
+}
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.DisplayMode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WidgetType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Direction)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeInterval)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ID)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.DisplayMode.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WidgetType.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Direction.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeInterval.Description)
+            </td>
+
+            <td>
+                @Html.Raw($"{new string(item.ID.ToString().Take(4).ToArray())}...")
+            </td>
+
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a> |
+                <a asp-action="Display" asp-route-id="@item.ID">Display</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

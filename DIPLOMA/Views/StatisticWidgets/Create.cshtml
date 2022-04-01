@@ -1,0 +1,28 @@
+﻿@model DIPLOMA.Models.StatisticWidget
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_PanelLayout.cshtml";
+
+    ViewData["ActivePage"] = DIPLOMA.Views.Panel.PanelNavPages.Statistic;
+}
+
+<div class="row">
+    <div class="col">
+        <form asp-action="Create">
+            @await Html.PartialAsync("~/Views/StatisticWidgets/_StatWidgetForm.cshtml", Model)
+
+            
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

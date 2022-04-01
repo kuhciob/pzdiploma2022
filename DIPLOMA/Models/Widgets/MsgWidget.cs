@@ -34,7 +34,7 @@ namespace DIPLOMA.Models
         [Display(Name = "Read the Message")]
         public bool ReadMessage { get; set; }
         [Display(Name = "Animation and Sound")]
-        public virtual ICollection<MsgWidgetContent> MsgWidgetContent { get; set; }
+        public List<MsgWidgetContent> MsgWidgetContent { get; set; }
 
 
     }

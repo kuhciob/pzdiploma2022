@@ -1,0 +1,171 @@
+﻿
+@model DIPLOMA.Models.ViewModels.DisplayStatisticViewModel
+@using System.Linq
+
+@{
+    Layout = "~/Views/Shared/_DisplayWidgetLayout.cshtml";
+}
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" />
+<base href="~/" />
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+    var headerTextTemplate = @Html.Raw(Json.Serialize(@Model.SWidget.HeaderText));
+    var scrollingSpeed = @Html.Raw(Json.Serialize(@Model.SWidget.ScrollingSpeed)) ;
+    var elCount = @Html.Raw(Json.Serialize(@Model.SWidget.ElementsCount))
+
+</script>
+
+@if (Model.DisplayTypeCD == SWDisplayModeConstants.List)
+
+{
+    <script>
+        setTimeout(function () {
+            window.location.reload(1);
+        }, scrollingSpeed * 1000 * 5);
+    </script>
+    @foreach (var item in Model.DonateMsgs)
+    {
+        <h3>
+            @Html.Raw(Model.SWidget.HeaderText.
+        Replace("{amount}", item.Amount.GetValueOrDefault().ToString("#.##")).
+        Replace("{user}", item.DonatorName))
+        </h3>
+        continue;
+
+        @if (item.DonatorName == null)
+        {
+            <h3>@Html.Raw(item.Amount.GetValueOrDefault().ToString("#.##"))</h3>
+
+        }
+        else
+     if (item.Amount == null)
+        {
+            <h3>@Html.Raw(item.DonatorName)</h3>
+
+        }
+        else
+        {
+            <h3>
+                @Html.Raw(Model.SWidget.HeaderText.
+            Replace("{amount}", item.Amount.GetValueOrDefault().ToString("#.##")).
+            Replace("{user}", item.DonatorName))
+            </h3>
+
+        }
+
+    }
+
+}
+else
+if (Model.DisplayTypeCD == SWDisplayModeConstants.СreepingLine)
+{
+    <script>
+        setTimeout(function () {
+            window.location.reload(1);
+        }, scrollingSpeed * 1000 * 10 * elCount);
+    </script>
+    <marquee direction = @Html.Raw(Json.Serialize(Model.SWidget.Direction.Value.Trim())) scrollamount="@Html.Raw(Json.Serialize(@Model.SWidget.ScrollingSpeed))"  >
+        <ul class="list-inline">
+            @foreach (var item in Model.DonateMsgs)
+            {
+                if (Model.SWidget.Direction.CD == SWDirectionConstants.LeftRight
+                    || Model.SWidget.Direction.CD == SWDirectionConstants.RightLeft)
+                {
+                        <li class="list-inline-item">
+                            <h3>
+                        @Html.Raw(Model.SWidget.HeaderText.
+               Replace("{amount}", item.Amount.GetValueOrDefault().ToString("#.##")).
+               Replace("{user}", item.DonatorName))
+                    </h3>
+                        </li>
+                }
+                else
+                {
+                    <h3>
+                        @Html.Raw(Model.SWidget.HeaderText.
+               Replace("{amount}", item.Amount.GetValueOrDefault().ToString("#.##")).
+               Replace("{user}", item.DonatorName))
+                    </h3>
+                }
+
+
+                continue;
+
+                @if (item.DonatorName == null)
+                {
+                    <h3>@Html.Raw(item.Amount.GetValueOrDefault().ToString("#.##"))</h3>
+
+                }
+                else
+        if (item.Amount == null)
+                {
+
+                    <h3>@Html.Raw(item.DonatorName)</h3>
+
+                }
+                else
+                {
+
+                    <h3>
+                        @Html.Raw(Model.SWidget.HeaderText.
+               Replace("{amount}", item.Amount.GetValueOrDefault().ToString("#.##")).
+               Replace("{user}", item.DonatorName))
+                    </h3>
+                }
+            }
+        </ul>
+        
+    </marquee>
+
+}
+else
+if (Model.DisplayTypeCD == SWDisplayModeConstants.Slider)
+{
+<script>
+    var headerTextTemplate = @Html.Raw(Json.Serialize(@Model.SWidget.HeaderText));
+    var donateMsgs = @Html.Raw(Json.Serialize(@Model.DonateMsgs));
+
+    $(document).ready(function () {
+        //displayContent();
+    })
+
+    function doSetTimeout(time) {
+        setTimeout(function () { console.log(time) }, time * 1000);
+    }
+    clearInterval(myInterval);
+
+    var contentIndex = 0;
+    var myInterval = setInterval(function () {
+
+        let donate = donateMsgs[contentIndex];
+        let contenttext = headerTextTemplate;
+
+        if (donate.amount) {
+            contenttext = contenttext.replace('{amount}', donate.amount)
+        }
+        if (donate.donatorName) {
+            contenttext = contenttext.replace('{user}', donate.donatorName);
+        }
+        contenttext = contenttext.replace('{amount}', '').replace('{user}', '');
+
+        document.getElementById("slidercontent").innerHTML = contenttext;
+        contentIndex++;
+        if (contentIndex == (donateMsgs.length - 1)) {
+            contentIndex = 0;
+        }
+
+    }, scrollingSpeed * 1000);
+
+    function displayContent() {
+        for (let i = 0; i < donateMsgs.length; ++i) {
+            
+        }
+    }
+</script>
+    <h3 id="slidercontent"> </h3>
+}
+

@@ -19,28 +19,27 @@ using System.Threading.Tasks;
 namespace DIPLOMA.Controllers
 {
     [Authorize]
-    public class MsgWidgetsController : Controller
+    public class MsgWidgetsController : BaseController
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
-        IHubContext<DonateHub> _hubContext;
+
         public MsgWidgetsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
-            IWebHostEnvironment webHost, IHubContext<DonateHub> hubContext)
+            IWebHostEnvironment webHost, IHttpContextAccessor httpContextAccessor)
+            : base(context, userManager, httpContextAccessor)
         {
-            _context = context;
-            _userManager = userManager;
             _webHostEnvironment = webHost;
-            _hubContext = hubContext;
+
         }
 
         // GET: MsgWidgets
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.MsgWidget.Include(m => m.User);
+            var applicationDbContext = _context.MsgWidget.
+                Include(m => m.User).
+                Where(r => r.UserID == _currentUserId);
             return View(await applicationDbContext.ToListAsync());
         }
-        // GET: MsgWidgets/Details/5
+
         [AllowAnonymous]
         public async Task<IActionResult> Display(Guid? id)
         {
@@ -55,17 +54,20 @@ namespace DIPLOMA.Controllers
                 .ThenInclude(m => m.Animation)
                 .Include(m => m.MsgWidgetContent)
                 .ThenInclude(m => m.Sound)
+
                 .FirstOrDefaultAsync(m => m.ID == id);
 
             DisplayMsgViewModel displayMsgViewModel = new DisplayMsgViewModel();
             displayMsgViewModel.MWidget = msgWidget;
             displayMsgViewModel.Content = new List<MsgWidgetContentViewModel>();
 
-            foreach (var item in msgWidget.MsgWidgetContent)
+            var contentUrls = ContanteToUrls(msgWidget.MsgWidgetContent.ToList());
+            foreach (var item in contentUrls)
             {
                 MsgWidgetContentViewModel msgVM = new MsgWidgetContentViewModel();
-                msgVM.AnimSrc = String.Format("data:image/gif;base64,{0}",
-                    Convert.ToBase64String(item.Animation.Data));
+                msgVM.AnimSrc = item.Item1;
+                msgVM.SoundSrc = item.Item2;
+
                 displayMsgViewModel.Content.Add(msgVM);
             }
 
@@ -75,9 +77,20 @@ namespace DIPLOMA.Controllers
             }
             return View(displayMsgViewModel);
         }
-        public ActionResult LoadAudio(byte[] audioBytes)
+        public ActionResult LoadAudio(MsgWidgetContent msgWidgetContent)
         {
-            return base.File(audioBytes, "audio/wav");
+            byte[] audioBytes = msgWidgetContent.Sound.Data;
+            string format = "audio/mp3";
+            if (msgWidgetContent.Sound.Extension.Contains("mp3"))
+            {
+                format = "audio/mp3";
+            }
+            else
+            if (msgWidgetContent.Sound.Extension.Contains("wav"))
+            {
+                format = "audio/wav";
+            }
+            return base.File(audioBytes, format);
         }
         // GET: MsgWidgets/Details/5
 
@@ -91,10 +104,12 @@ namespace DIPLOMA.Controllers
             var msgWidget = await _context.MsgWidget
                 .Include(m => m.User)
                 .Include(m => m.MsgWidgetContent)
-                .ThenInclude(m => m.Animation)
-                .Include(m => m.MsgWidgetContent)
                 .ThenInclude(m => m.Sound)
+                .Include(m => m.MsgWidgetContent)
+                .ThenInclude(m => m.Animation)
+                .Where(r => r.UserID == _currentUserId)
                 .FirstOrDefaultAsync(m => m.ID == id);
+
             msgWidget.DisplayUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" +
                     $"{msgWidget.Url.Replace("Controller", "")}";
 
@@ -106,24 +121,27 @@ namespace DIPLOMA.Controllers
 
             MsgWidgetViewModel viewModel = new MsgWidgetViewModel();
             viewModel.MWidget = msgWidget;
-            viewModel.MsgWidgetContent = msgWidget.MsgWidgetContent.ToList();
+            viewModel.VMMsgWidgetContent = msgWidget.MsgWidgetContent.ToList();
 
-            foreach (var item in viewModel.MsgWidgetContent)
+
+            foreach (var item in viewModel.VMMsgWidgetContent)
             {
-                if(item.Animation?.Data != null
-                    && item.Animation.Data.Length > 0)
-                item.AnimSrc = String.Format("data:image/gif;base64,{0}", Convert.ToBase64String(item.Animation.Data));
+                var contentsUrls = ContanteToUrls(item);
+
+                item.AnimSrc = contentsUrls.Item1;
+                item.SoundSrc = contentsUrls.Item2;
 
             }
 
             return View(viewModel);
         }
 
+        #region Create
         // GET: /MsgWidgets/Create
         public async Task<IActionResult> CreateAsync()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            if(user == null)
+            if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(HttpContext.User)}'.");
             }
@@ -135,51 +153,32 @@ namespace DIPLOMA.Controllers
             vm.MWidget.DisplayTimeSec = 5;
 
             var contentList = new List<MsgWidgetContent>();
-            
+
             var msgContent = new MsgWidgetContent();
 
             contentList.Add(msgContent);
 
-            vm.MsgWidgetContent = contentList;
+            vm.VMMsgWidgetContent = contentList;
 
 
             return View(vm);
         }
-       
-        private async Task<UploadFile> GetUploadFileAsync(IFormFile formFile)
-        {
-            using (var memoryStream = new MemoryStream())
-            {
-                await formFile.CopyToAsync(memoryStream);
-                UploadFile uploadFile = new UploadFile();
-                uploadFile.ID = Guid.NewGuid();
-                uploadFile.Name = formFile.FileName;
-                if (uploadFile.Name.LastIndexOf(".") > 0)
-                {
-                    uploadFile.Extension = uploadFile.Name.
-                        Trim().
-                        Substring(uploadFile.Name.LastIndexOf("."));
-                }
-                uploadFile.Data = memoryStream.ToArray();
 
-                return uploadFile;
-            }
-        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(MsgWidgetViewModel msgWidgetVM)
         {
             var msgWidget = msgWidgetVM.MWidget;
-            var msgWidgetContent = msgWidgetVM.MsgWidgetContent;
-            msgWidget.UserID = (string)ViewData["UserID"];
+            var msgWidgetContent = msgWidgetVM.VMMsgWidgetContent;
+            //msgWidget.UserID = (string)ViewData["UserID"];
 
             if (ModelState.IsValid)
             {
                 try
                 {
                     msgWidget.ID = Guid.NewGuid();
-                    msgWidget.Url = $"/{nameof(MsgWidgetsController)}/{nameof(this.Display)}/{msgWidget.ID}";
-                    msgWidget.DisplayUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}"+
+                    msgWidget.Url = $"/{nameof(MsgWidgetsController).Replace("Controller", "")}/{nameof(this.Display)}/{msgWidget.ID}";
+                    msgWidget.DisplayUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" +
                     $"{msgWidget.Url}";
                     _context.Add(msgWidget);
                     foreach (var content in msgWidgetContent)
@@ -206,8 +205,8 @@ namespace DIPLOMA.Controllers
                         else
                         {
                             ModelState.AddModelError("File", "The files is too large.");
-                        }     
-                    } 
+                        }
+                    }
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -222,23 +221,8 @@ namespace DIPLOMA.Controllers
             return View(msgWidget);
         }
 
-        private string GetUploadedFileName(IFormFile file)
-        {
-            string uniqueFileName = null;
-
-            if (file != null)
-            {
-                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    file.CopyTo(fileStream);
-                }
-            }
-            return uniqueFileName;
-        }
-        // GET: MsgWidgets/Edit/5
+        #endregion
+        #region Edit
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -246,13 +230,175 @@ namespace DIPLOMA.Controllers
                 return NotFound();
             }
 
-            var msgWidget = await _context.MsgWidget.FindAsync(id);
+            var msgWidget = await _context.MsgWidget
+               .Include(m => m.User)
+               .Include(m => m.MsgWidgetContent)
+               .ThenInclude(m => m.Animation)
+               .Include(m => m.MsgWidgetContent)
+               .ThenInclude(m => m.Sound)
+               .Where(r => r.UserID == _currentUserId)
+               .FirstOrDefaultAsync(m => m.ID == id);
+            msgWidget.DisplayUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" +
+                    $"{msgWidget.Url.Replace("Controller", "")}";
+
             if (msgWidget == null)
             {
                 return NotFound();
             }
+
+            MsgWidgetViewModel viewModel = new MsgWidgetViewModel();
+            viewModel.MWidget = msgWidget;
+            //viewModel.VMMsgWidgetContent = new List<MsgWidgetContent>() { new MsgWidgetContent() };
+            viewModel.VMMsgWidgetContent = msgWidget.MsgWidgetContent.ToList();
+
+
+            foreach (var item in viewModel.VMMsgWidgetContent)
+            {
+                var contentsUrls = ContanteToUrls(item);
+
+                item.AnimSrc = contentsUrls.Item1;
+                item.SoundSrc = contentsUrls.Item2;
+                item.AnimFormFile = GetFormFile(item.Animation);
+                item.SoundFormFile = GetFormFile(item.Sound);
+            }
+            viewModel.VMMsgWidgetContent.Add(new MsgWidgetContent());
+
+            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", msgWidget.UserID);
+            return View(viewModel);
+        }
+        public async Task<IActionResult> EditBASE(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var msgWidget = await _context.MsgWidget.FirstOrDefaultAsync(m => m.ID == id);
+            msgWidget.DisplayUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" +
+                    $"{msgWidget.Url.Replace("Controller", "")}";
+
+            if (msgWidget == null)
+            {
+                return NotFound();
+            }
+
             ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", msgWidget.UserID);
             return View(msgWidget);
+        }
+        // POST: MsgWidgets/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, MsgWidgetViewModel msgWidgetViewModel)
+        {
+            MsgWidget msgWidget = msgWidgetViewModel.MWidget;
+            List<MsgWidgetContent> contentList = msgWidgetViewModel.VMMsgWidgetContent;
+
+            if (id != msgWidget.ID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                //return View(msgWidgetViewModel.MWidget);
+
+                try
+                {
+                    //var origContent = await _context.MsgWidgetContent.
+                    //    Where(r => r.MsgWidgetID == msgWidget.ID).
+                    //    ToListAsync();
+
+                    msgWidget.MsgWidgetContent = new List<MsgWidgetContent>();
+                    List<Guid?> deleatedFileID = new List<Guid?>();
+                    foreach (var content in contentList)
+                    {
+
+                        IFormFile animFromFile = content.AnimFormFile;
+                        IFormFile soundFromFile = content.SoundFormFile;
+
+                        if (animFromFile == null
+                            && soundFromFile == null)
+                        {
+                            continue;
+                        }
+
+                        if ((animFromFile?.Length + soundFromFile?.Length ?? 0) < 2097152 * 20)
+                        {
+                            if (animFromFile != null)
+                            {
+                                Guid? oldId = content.AnimationFileId;
+                                if (oldId != null)
+                                {
+                                    deleatedFileID.Add(oldId);
+                                }
+
+                                UploadFile animUploadFile = await GetUploadFileAsync(animFromFile);
+                                content.AnimationFileId = animUploadFile.ID;
+                           
+                                _context.Add(animUploadFile);
+                            }
+                            if (soundFromFile != null)
+                            {
+                                var oldId = content.SoundFileId;
+                                if (oldId != null)
+                                {
+                                    deleatedFileID.Add(oldId);
+                                }
+
+                                UploadFile soundUploadFile = await GetUploadFileAsync(soundFromFile);
+                                content.SoundFileId = soundUploadFile.ID;
+
+                                _context.Add(soundUploadFile);
+
+                            }
+                            if (content.ID != null
+                                && content.MsgWidgetID != null)
+                            {
+                                msgWidget.MsgWidgetContent.Add(content);
+                            }
+                            else
+                            {
+                                content.MsgWidgetID = msgWidgetViewModel.MWidget.ID;
+                                _context.Add(content);
+                            }
+
+
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("File", "The files is too large.");
+                        }
+
+
+                    }
+
+                    _context.Update(msgWidgetViewModel.MWidget);
+                    await _context.SaveChangesAsync();
+
+                    foreach (var item in deleatedFileID)
+                    {
+                        _context.Remove(_context.UploadFile.
+                                        FirstOrDefault(f => f.ID == item));
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!MsgWidgetExists(msgWidgetViewModel.MWidget.ID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", msgWidgetViewModel.MWidget.UserID);
+            return View(msgWidgetViewModel.MWidget);
         }
 
         // POST: MsgWidgets/Edit/5
@@ -260,7 +406,7 @@ namespace DIPLOMA.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("MinAmt,MaxAmt,HeaderText,MaxSymbols,DisplayTimeSec,RandomContent,ReadHeader,ReadMessage,ID,UserID,Name,Url")] MsgWidget msgWidget)
+        public async Task<IActionResult> EditBASE(Guid id, [Bind("MinAmt,MaxAmt,HeaderText,MaxSymbols,DisplayTimeSec,RandomContent,ReadHeader,ReadMessage,ID,UserID,Name,Url")] MsgWidget msgWidget)
         {
             if (id != msgWidget.ID)
             {
@@ -291,6 +437,8 @@ namespace DIPLOMA.Controllers
             return View(msgWidget);
         }
 
+        #endregion
+        #region Delete
         // GET: MsgWidgets/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
@@ -320,10 +468,114 @@ namespace DIPLOMA.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        #endregion
+        #region Helpers
+        private IFormFile GetFormFile(UploadFile uploadFile)
+        {
+            if (uploadFile != null
+                && uploadFile.Data != null)
+            {
+                using (var stream = new MemoryStream(uploadFile.Data))
+                {
+                    IFormFile file = new FormFile(stream, 0, uploadFile.Data.Length,
+                        uploadFile.Name, uploadFile.Name);
+                    return file;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
         private bool MsgWidgetExists(Guid id)
         {
             return _context.MsgWidget.Any(e => e.ID == id);
         }
+        private async Task<UploadFile> GetUploadFileAsync(IFormFile formFile)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                await formFile.CopyToAsync(memoryStream);
+                UploadFile uploadFile = new UploadFile();
+                uploadFile.ID = Guid.NewGuid();
+                uploadFile.Name = formFile.FileName;
+                if (uploadFile.Name.LastIndexOf(".") > 0)
+                {
+                    uploadFile.Extension = uploadFile.Name.
+                        Trim().
+                        Substring(uploadFile.Name.LastIndexOf("."));
+                }
+                uploadFile.Data = memoryStream.ToArray();
+
+                return uploadFile;
+            }
+        }
+        private string GetUploadedFileName(IFormFile file)
+        {
+            string uniqueFileName = null;
+
+            if (file != null)
+            {
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    file.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName;
+        }
+        private IEnumerable<(string, string)> ContanteToUrls(IEnumerable<MsgWidgetContent> contentList)
+        {
+            foreach (var item in contentList)
+            {
+                yield return ContanteToUrls(item);
+            }
+        }
+        private (string, string) ContanteToUrls(MsgWidgetContent content)
+        {
+            string animScr = "";
+            string soundScr = "";
+
+            if (content.Animation != null)
+            {
+                if (content.Animation.Extension.Contains("gif"))
+                {
+                    animScr = String.Format("data:image/gif;base64,{0}",
+                     Convert.ToBase64String(content.Animation.Data));
+                }
+                else
+                {
+                    animScr = String.Format("data:image/{0};base64,{1}",
+                     content.Animation.Extension.Replace(".", ""), Convert.ToBase64String(content.Animation.Data));
+                }
+
+            }
+            if (content.Sound != null)
+            {
+                if (content.Sound.Extension.Contains("wav"))
+                {
+                    soundScr = String.Format("data:audio/wav;base64,{0}",
+                        Convert.ToBase64String(content.Sound.Data));
+                }
+                else
+                if (content.Sound.Extension.Contains("mp3"))
+                {
+                    soundScr = String.Format("data:audio/mp3;base64,{0}",
+                        Convert.ToBase64String(content.Sound.Data));
+                }
+                else
+                {
+                    soundScr = String.Format("data:audio/{0};base64,{1}",
+                        content.Sound.Extension.Replace(".", ""), Convert.ToBase64String(content.Sound.Data));
+                }
+
+            }
+
+            return (animScr, soundScr);
+        }
+        #endregion
+
     }
 }

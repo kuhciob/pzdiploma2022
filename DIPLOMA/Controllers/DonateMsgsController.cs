@@ -9,29 +9,41 @@ using DIPLOMA.Data;
 using DIPLOMA.Models;
 using Microsoft.AspNetCore.SignalR;
 using DIPLOMA.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace DIPLOMA.Controllers
 {
-    public class DonateMsgsController : Controller
+    [Authorize]
+    public class DonateMsgsController : BaseController
     {
         private IHubContext<DonateHub> _donateHub;
-        private readonly ApplicationDbContext _context;
-
-        public DonateMsgsController(ApplicationDbContext context, IHubContext<DonateHub> hubContext)
+        //private readonly ApplicationDbContext _context;
+        //private readonly UserManager<ApplicationUser> _userManager;
+        //private string _currentUserId;
+        public DonateMsgsController(ApplicationDbContext context, IHubContext<DonateHub> hubContext,
+            UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
+            : base(context, userManager, httpContextAccessor)
         {
-            _context = context;
             _donateHub = hubContext;
         }
-
+        
         //// GET: DonateMsgs
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.DonateMsg.Include(d => d.User);
+            var applicationDbContext = _context.DonateMsg.
+                Include(d => d.User).
+                Where(r => r.UserID == _currentUserId);
             return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Donate/lvasuk
+        [AllowAnonymous]
         [HttpGet("Donate/{username}")]
+        //[HttpGet()]
+
         public async Task<IActionResult> Create(string username)
         {
             if (string.IsNullOrEmpty(username))
@@ -48,7 +60,7 @@ namespace DIPLOMA.Controllers
             }
             ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", user.Id);
 
-            return View(new DonateMsg() { UserID = user.Id });
+            return View();
         }
 
        
@@ -56,17 +68,19 @@ namespace DIPLOMA.Controllers
         // POST: DonateMsgs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("Donate/{username}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserID,Amount,DonatorName,Message")] DonateMsg donateMsg)
+        [AllowAnonymous]
+        public async Task<IActionResult> Create([Bind("ID,UserID,Amount,DonatorName,Message")] DonateMsg donateMsg)
         {
             if (ModelState.IsValid)
             {
-                //donateMsg.Date = DateTime.Now;
+                donateMsg.CreatedDate = DateTime.Now;
                 _context.Add(donateMsg);
                 await _context.SaveChangesAsync();
-                await _donateHub.Clients.All.SendAsync("ReceiveMessage", donateMsg);
-                return RedirectToAction(nameof(Index));
+                await _donateHub.Clients.Group(donateMsg.UserID).SendAsync("ReceiveMessage", donateMsg);
+                //await _donateHub.Clients.All.SendAsync("ReceiveMessage", donateMsg);
+                return RedirectToAction(nameof(Create));
             }
             ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", donateMsg.UserID);
             
@@ -74,6 +88,7 @@ namespace DIPLOMA.Controllers
 
             return View(donateMsg);
         }
+        
 
         public async Task<IActionResult> Details(int? id)
         {

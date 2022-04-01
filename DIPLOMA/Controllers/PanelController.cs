@@ -1,24 +1,23 @@
 ﻿using DIPLOMA.Data;
 using DIPLOMA.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace DIPLOMA.Controllers
 {
-    public class PanelController : Controller
+    public class PanelController : BaseController
     {
-        private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
-
-        public PanelController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public PanelController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, 
+            IHttpContextAccessor httpContextAccessor)
+            : base(context, userManager, httpContextAccessor)
         {
-            _context = context;
-            _userManager = userManager;
         }
         public async Task<IActionResult> Index()
         {

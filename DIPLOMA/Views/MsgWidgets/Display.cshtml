@@ -3,55 +3,155 @@
 @using System.Linq
 
 @{
-    Layout = "~/Views/Shared/_DisplayDonateLayout.cshtml";
+    Layout = "~/Views/Shared/_DisplayWidgetLayout.cshtml";
 
     bool randomContent = Model.MWidget.RandomContent;
     int contentIndx = 0;
     Random random = new Random();
 
 }
+<script>
+    setTimeout(function () { location.reload() }, 900000);
+</script>
+
+<button type="button" onclick="testbutton()" hidden> TEST</button>
+<button id="playButton" type="button" onclick="displayContent()" hidden> PLAY</button>
+
 <div>
-    <dl class="row" id="donate" style="display:none">
+    <dl class="row" id="donate" style="display:none; text-align:center; width:1000px; ">
         <dd class="col-sm-10">
             <h2 id="DonatorName"></h2>
         </dd>
         <dd class="col-sm-10">
-            <h2 id="Amount"></h2>
+            <img id="Animation" src="" alt="" class="img-fluid" height="300">
         </dd>
         <dd class="col-sm-10">
             <h2 id="Message"></h2>
         </dd>
-        <dd class="col-sm-10">
-            <img id="Animation" src="" alt="" class="img-fluid">
+        <dd>
+            <audio id="sound" controls preload='none' style="display:none;" allow="autoplay">
+                <source id="soundSource" src="" />
+            </audio>
         </dd>
     </dl>
 </div>
+<script src='https://code.responsivevoice.org/responsivevoice.js'></script>
+
+<input onclick="responsiveVoice.speak('This is the text you want to speak');" type='button' value='🔊 Play' />
 <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
 <script>
 
+    var wdgContent = @Html.Raw(Json.Serialize(@Model.Content));
+    var randomContent = @Html.Raw(Model.MWidget.RandomContent.ToString().ToLower());
+    var readHeader = @Html.Raw(Model.MWidget.ReadHeader.ToString().ToLower());
+    var readMsg = @Html.Raw(Model.MWidget.ReadMessage.ToString().ToLower());
 
-    const hubConnection = new signalR.HubConnectionBuilder()
-        .withUrl("/donates")
+    var contentIndx = 0;
+    var displayTime = @Html.Raw(Json.Serialize(@Model.MWidget.DisplayTimeSec)) * 1000;
+    var headerTextTemplate = @Html.Raw(Json.Serialize(@Model.MWidget.HeaderText));
+
+    var userID = '@Html.Raw(Json.Serialize(@Model.MWidget.UserID))'
+    var soundControler = document.getElementById("sound");
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
+    function displayDonate(donate) {
+        displayContent();
+        //document.getElementById("playButton").click();
+        
+        let donatorName = headerTextTemplate;
+        let donateMsg = donate.message;
+
+        donatorName = donatorName.replace('{amount}', donate.amount).replace('{user}', donate.donatorName);
+
+
+        document.getElementById("DonatorName").innerHTML = donatorName;
+        document.getElementById("Message").innerHTML = donateMsg;
+
+        document.getElementById("donate").style.display = 'block';
+
+        if (readMsg) {
+            voiceMessage(donateMsg)
+        }
+   
+
+        setTimeout(function () {
+            document.getElementById("donate").style.display = 'none';
+            soundControler.pause();
+            soundControler.currentTime = 0;
+        }, displayTime);
+        }
+    function voiceMessage(message) {
+            let utter = new SpeechSynthesisUtterance();
+            //if the English language
+            if (/^[a-zA-Z]+$/.test(message))
+            {
+                utter.lang = 'en-US';
+            }
+            else //if the not English language
+            {
+                utter.lang = 'ru-RU';
+            }
+
+            utter.text = message;
+            utter.volume = 1;
+
+            window.speechSynthesis.speak(utter);
+        }
+    function displayContent() {
+        let audioSrc = "";
+        let imgSrc = "";
+        let newIndx = 0;
+
+        if (randomContent) {
+            newIndx = getRandomInt(wdgContent.length);
+        }
+        else {
+            nextIndx = contentIndx;// - (parseInt(contentIndx / wdgContent.length) * wdgContent.length);
+            contentIndx++;
+            if (contentIndx >= wdgContent.length) {
+                contentIndx = 0;
+            }
+        }
+        imgSrc = wdgContent[newIndx].animSrc;
+        audioData = wdgContent[newIndx].soundData;
+        audioSrc = wdgContent[newIndx].soundSrc;
+
+
+        document.getElementById("soundSource").remove()
+        document.getElementById("Animation").src = imgSrc
+
+        let newsource = document.createElement('source');
+        newsource.id = "soundSource";
+        newsource.src = audioSrc;
+        soundControler.appendChild(newsource);
+        soundControler.play();
+
+        let soundDuration = soundControler.duration;
+        console.log(soundControler);
+
+        console.log(soundDuration);
+    }
+    function testbutton() {
+
+        displayContent();
+
+        document.getElementById("DonatorName").innerHTML = "IVAN DONATOr - 100";
+
+        document.getElementById("Message").innerHTML = "TEXT MESSSSA SLAKDLASKDLKASLDKALSD" +
+            "TETETTETETETTSTSTSTTTT STSTSTTSTSTSSSSSSSSSSSS SSSSSSSTTST STDTDSTSDTT DTS T";
+
+        document.getElementById("donate").style.display = 'block';
+    }
+
+
+    var hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl("/donates?userid="+userID)
         .withAutomaticReconnect()
         .build();
-
     // Get message from hub
-    hubConnection.on('ReceiveMessage', function (message) {
-
-        document.getElementById("DonatorName").value = donate.donatorName;
-        document.getElementById("Amount").value = donate.amount;
-        document.getElementById("Message").value = donate.message;
-
-
-        document.getElementById("Animation").src = @Html.Raw(Model.Content.ElementAt(randomContent ?
-            random.Next(0, Model.Content.Count) : (contentIndx - ((int)(contentIndx / Model.Content.Count) * Model.Content.Count))))
-
-            document.getElementById("donate").style.display = 'block';
-
-            setTimeout(function () {
-                document.getElementById("donate").style.display = 'none';
-            }, 5000);
-
+    hubConnection.on('ReceiveMessage', function (donate) {
+        displayDonate(donate);
         });
     hubConnection.start();
 
@@ -67,3 +167,6 @@
     }
 
 </script>
+
+
+

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,6 +19,8 @@ namespace DIPLOMA.Models
         public decimal? Amount { get; set; }
 
         [Display(Name = "Donator name")]
+        [Required]
+        [DefaultValue("")]
         public string DonatorName { get; set; }
         [Display(Name = "Message")]
         public string Message { get; set; }

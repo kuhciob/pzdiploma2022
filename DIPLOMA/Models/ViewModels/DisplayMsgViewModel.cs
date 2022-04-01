@@ -8,6 +8,7 @@ namespace DIPLOMA.Models.ViewModels
     public class MsgWidgetContentViewModel
     {
         public string SoundSrc { get; set; }
+        public byte[] SoundData { get; set; }
         public string AnimSrc { get; set; }
     }
     public class DisplayMsgViewModel
