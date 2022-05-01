@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using DIPLOMA.Data;
 using DIPLOMA.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,13 +15,16 @@ namespace DIPLOMA.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        protected readonly ApplicationDbContext _context;
 
         public IndexModel(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
         }
 
         public string Username { get; set; }
@@ -36,6 +40,9 @@ namespace DIPLOMA.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            
+            [Display(Name = "Nickname")]
+            public string Nickname { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -47,7 +54,8 @@ namespace DIPLOMA.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                Nickname = user.NickName
             };
         }
 
@@ -78,6 +86,7 @@ namespace DIPLOMA.Areas.Identity.Pages.Account.Manage
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            
             if (Input.PhoneNumber != phoneNumber)
             {
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
@@ -85,6 +94,25 @@ namespace DIPLOMA.Areas.Identity.Pages.Account.Manage
                 {
                     StatusMessage = "Unexpected error when trying to set phone number.";
                     return RedirectToPage();
+                }
+            }
+            if (Input.Nickname != user.NickName)
+            {
+                var existetUser = _userManager.Users.FirstOrDefault(user => user.NickName.ToLower() == Input.Nickname.ToLower());
+
+                if (existetUser != null)
+                {
+                    string error = $"Nickname '{Input.Nickname.ToLower()}' already exist.";
+                    StatusMessage = error;
+                    ModelState.AddModelError(string.Empty, error);
+                    return RedirectToPage();
+
+                }
+                else
+                {
+                    user.NickName = Input.Nickname.ToLower();
+                    await _userManager.UpdateAsync(user);
+                    await _context.SaveChangesAsync();
                 }
             }
 

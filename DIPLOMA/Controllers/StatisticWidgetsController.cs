@@ -45,7 +45,12 @@ namespace DIPLOMA.Controllers
                 .Include(m => m.TimeInterval)
                 .Include(m => m.DisplayMode)
                 .FirstOrDefaultAsync(m => m.ID == id);
-            
+
+            if (stawidget == null)
+            {
+                return NotFound();
+            }
+
             DateTime borderDate = new DateTime();
             switch (stawidget.TimeInterval.CD)
             {

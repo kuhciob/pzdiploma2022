@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using Stripe;
 
 namespace DIPLOMA.Controllers
 {
@@ -80,6 +81,26 @@ namespace DIPLOMA.Controllers
                 await _context.SaveChangesAsync();
                 await _donateHub.Clients.Group(donateMsg.UserID).SendAsync("ReceiveMessage", donateMsg);
                 //await _donateHub.Clients.All.SendAsync("ReceiveMessage", donateMsg);
+                List<FundraisingWidget> fundrasingWidgets = await _context.FundraisingWidget.
+                    Where(r => r.UserID == donateMsg.UserID
+                    && r.Active == true).
+                    ToListAsync();
+
+                try
+                {
+                    foreach (var item in fundrasingWidgets)
+                    {
+                        item.CollectedAmt = item.CollectedAmt.GetValueOrDefault() + donateMsg.Amount;
+                        _context.Update(item);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                catch(Exception ex)
+                {
+
+                }
+                
+
                 return RedirectToAction(nameof(Create));
             }
             ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", donateMsg.UserID);

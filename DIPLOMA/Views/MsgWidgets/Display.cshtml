@@ -35,11 +35,19 @@
         </dd>
     </dl>
 </div>
-<script src='https://code.responsivevoice.org/responsivevoice.js'></script>
 
-<input onclick="responsiveVoice.speak('This is the text you want to speak');" type='button' value='🔊 Play' />
+<script src="https://code.responsivevoice.org/responsivevoice.js?key=mHp3wj44"></script>
+<input id="texttovoice" style="display:none"/>
+<input onclick="testVoice2()" type='button' value='🔊 Play' style="display:none"/>
+
+
 <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
 <script>
+    function testVoice2() {
+        let message = document.getElementById('texttovoice').value;
+        console.log(message)
+        voiceMessage2(message)
+    }
 
     var wdgContent = @Html.Raw(Json.Serialize(@Model.Content));
     var randomContent = @Html.Raw(Model.MWidget.RandomContent.ToString().ToLower());
@@ -71,7 +79,8 @@
         document.getElementById("donate").style.display = 'block';
 
         if (readMsg) {
-            voiceMessage(donateMsg)
+            //voiceMessage(donateMsg)
+            voiceMessage2(donateMsg)
         }
    
 
@@ -80,7 +89,26 @@
             soundControler.pause();
             soundControler.currentTime = 0;
         }, displayTime);
+    }
+
+    function voiceMessage2(message)
+    {
+        voice = "UK English Male";
+        //if the English language
+        if (/^[a-zA-Z]+$/.test(message)) {
+            voice = "UK English Male";
+            responsiveVoice.speak(message, voice);
+
         }
+        else //if the not English language
+        {
+            voice = "Ukrainian Female";
+            responsiveVoice.speak(message, voice);
+
+        }
+
+    }
+
     function voiceMessage(message) {
             let utter = new SpeechSynthesisUtterance();
             //if the English language

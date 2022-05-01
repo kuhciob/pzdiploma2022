@@ -10,6 +10,9 @@
     Random random = new Random();
 
 }
+<input type="color" id="favcolor" name="favcolor" value="#ff0000">
+<br>
+<br>
 <button type="button" onclick="testbutton()"> TEST</button>
 <div>
     <dl class="row" id="donate" style="display:none; text-align:center; width:1000px; ">
@@ -31,20 +34,6 @@
     function testbutton() {
 
         let imgSrc = "";
-
-        if (@Html.Raw(randomContent)) {
-            imgSrc = "@Html.Raw(Model.Content.ElementAt(randomContent ?
-            random.Next(0, Model.Content.Count) :
-            (contentIndx - ((int)(contentIndx / Model.Content.Count) * Model.Content.Count))).
-            AnimSrc)"
-        }
-        else {
-            imgSrc = "@Html.Raw(Model.Content.ElementAt(randomContent ?
-            random.Next(0, Model.Content.Count) :
-            (contentIndx - ((int)(contentIndx / Model.Content.Count) * Model.Content.Count))).
-            AnimSrc)"
-        }
-
 
 
 

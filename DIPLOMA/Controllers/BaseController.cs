@@ -16,6 +16,7 @@ using System.Security.Claims;
 
 namespace DIPLOMA.Controllers
 {
+    [Authorize]
     public class BaseController : Controller
     {
         protected readonly ApplicationDbContext _context;

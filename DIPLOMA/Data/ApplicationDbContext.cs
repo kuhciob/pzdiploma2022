@@ -30,10 +30,11 @@ namespace DIPLOMA.Data
         public DbSet<DIPLOMA.Models.StatWidgetType> StatWidgetType { get; set; }
         public DbSet<DIPLOMA.Models.StatWidgetTimeIntervalType> StatWidgetTimeIntervalType { get; set; }
         public DbSet<DIPLOMA.Models.StatWidgetDirectionType> StatWidgetDirectionType { get; set; }
-
         public DbSet<DIPLOMA.Models.StatisticWidget> StatisticWidget { get; set; }
+        public DbSet<DIPLOMA.Models.FundraisingWidget> FundraisingWidget { get; set; }
 
 
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -359,6 +360,50 @@ namespace DIPLOMA.Data
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__StatisticWidget_UserID");
             });
+            
+            modelBuilder.Entity<FundraisingWidget>(entity =>
+            {
+                //entity.Property(e => e.ID).
+                //UseIdentityColumn();
+
+                entity.Property(e => e.IndicatorBackgroundColorHex).
+                HasColumnType("nvarchar(7)").
+                HasDefaultValue("#ffffff");
+
+                entity.Property(e => e.IndicatorColorHex).
+                HasColumnType("nvarchar(7)").
+                HasDefaultValue("#000000");
+
+                entity.Property(e => e.DigitsColorHex).
+                HasColumnType("nvarchar(7)").
+                HasDefaultValue("#000000");
+
+                entity.Property(e => e.BorderColorHex).
+                HasColumnType("nvarchar(7)").
+                HasDefaultValue("#000000");
+
+                entity.Property(e => e.CollectedAmt).
+                HasColumnType("decimal(18, 4)")
+                .HasDefaultValue(0m);
+
+                entity.Property(e => e.InitialAmt).
+                HasColumnType("decimal(18, 4)")
+                .HasDefaultValue(0m);
+
+                entity.Property(e => e.TargetAmt)
+                .HasDefaultValue(0m);
+
+               
+                entity.Property(e => e.HideInitAndTargetAmounts)
+                .HasDefaultValue(false);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.FundraisingWidgets)
+                    .HasForeignKey(d => d.UserID)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+
+            });
+            
         }
 
         public override int SaveChanges()

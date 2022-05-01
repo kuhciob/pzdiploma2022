@@ -1925,7 +1925,7 @@ select.form-control:focus::-ms-value {
 }
 
 .form-control-file,
-.form-control-range {
+.form-range {
   display: block;
   width: 100%;
 }

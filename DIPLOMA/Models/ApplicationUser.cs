@@ -19,6 +19,6 @@ namespace DIPLOMA.Models
         public virtual ICollection<DonateMsg> DonateMsgs { get; set; }
         public virtual ICollection<MsgWidget> MsgWidgets { get; set; }
         public virtual ICollection<StatisticWidget> StatisticWidgets { get; set; }
-
+        public virtual ICollection<FundraisingWidget> FundraisingWidgets { get; set; }
     }
 }

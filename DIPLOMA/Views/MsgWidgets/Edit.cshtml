@@ -17,48 +17,7 @@
         <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="MWidget.HeaderText" class="control-label"></label>
-                <input asp-for="MWidget.HeaderText" class="form-control" />
-                <span asp-validation-for="MWidget.HeaderText" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MWidget.MaxSymbols" class="control-label"></label>
-                <input asp-for="MWidget.MaxSymbols" class="form-control" />
-                <span asp-validation-for="MWidget.MaxSymbols" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MWidget.DisplayTimeSec" class="control-label"></label>
-                <input asp-for="MWidget.DisplayTimeSec" class="form-control" />
-                <span asp-validation-for="MWidget.DisplayTimeSec" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MWidget.RandomContent" class="control-label"></label>
-                <input asp-for="MWidget.RandomContent" />
-                <span asp-validation-for="MWidget.RandomContent" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MWidget.ReadHeader" class="control-label"></label>
-                <input asp-for="MWidget.ReadHeader" />
-                <span asp-validation-for="MWidget.ReadHeader" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MWidget.ReadMessage" class="control-label"></label>
-                <input asp-for="MWidget.ReadMessage" />
-                <span asp-validation-for="MWidget.ReadMessage" class="text-danger"></span>
-            </div>
-            <input type="hidden" asp-for="MWidget.ID" />
-            @Html.HiddenFor(model => model.MWidget.UserID)
-            <div class="form-group">
-                <label asp-for="MWidget.Name" class="control-label"></label>
-                <input asp-for="MWidget.Name" class="form-control" />
-                <span asp-validation-for="MWidget.Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MWidget.Url" class="control-label"></label>
-                <input asp-for="MWidget.Url" class="form-control" readonly />
-                <span asp-validation-for="MWidget.Url" class="text-danger"></span>
-            </div>
+            
 
             @await Html.PartialAsync("~/Views/MsgWidgets/_MsgWidgetGrid.cshtml", Model)
 
