@@ -32,9 +32,7 @@ namespace DIPLOMA.Data
         public DbSet<DIPLOMA.Models.StatWidgetDirectionType> StatWidgetDirectionType { get; set; }
         public DbSet<DIPLOMA.Models.StatisticWidget> StatisticWidget { get; set; }
         public DbSet<DIPLOMA.Models.FundraisingWidget> FundraisingWidget { get; set; }
-
-
-        
+        public DbSet<DIPLOMA.Models.TextStyle> TextStyle { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -327,6 +325,10 @@ namespace DIPLOMA.Data
                     WithOne(e => e.MsgWidget).
                     HasForeignKey(e => e.MsgWidgetID).
                     OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne<TextStyle>(s => s.TextStyle)
+                    .WithMany(ad => ad.MsgWidgets)
+                    .HasForeignKey(ad => ad.TextStyleID);
             });
 
             modelBuilder.Entity<StatisticWidget>(entity =>
@@ -359,6 +361,11 @@ namespace DIPLOMA.Data
                     .HasForeignKey(d => d.UserID)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__StatisticWidget_UserID");
+
+
+                entity.HasOne<TextStyle>(s => s.TextStyle)
+                    .WithMany(ad => ad.StatisticWidgets)
+                    .HasForeignKey(ad => ad.TextStyleID);
             });
             
             modelBuilder.Entity<FundraisingWidget>(entity =>
@@ -391,6 +398,7 @@ namespace DIPLOMA.Data
                 .HasDefaultValue(0m);
 
                 entity.Property(e => e.TargetAmt)
+                .HasColumnType("decimal(18, 4)")
                 .HasDefaultValue(0m);
 
                
@@ -402,8 +410,28 @@ namespace DIPLOMA.Data
                     .HasForeignKey(d => d.UserID)
                     .OnDelete(DeleteBehavior.ClientSetNull);
 
+                entity.HasOne<TextStyle>(s => s.TextStyle)
+                    .WithMany(ad => ad.FundraisingWidgets)
+                    .HasForeignKey(ad => ad.TextStyleID);
+
             });
             
+            modelBuilder.Entity<TextStyle>(entity =>
+            {
+                //entity.Property(e => e.ID).
+                //UseIdentityColumn();
+
+                entity.Property(e => e.TextColorHex).
+                    HasColumnType("nvarchar(7)").
+                    HasDefaultValue("#000000");
+
+                entity.Property(e => e.Bold)
+                    .HasDefaultValue(false);
+                entity.Property(e => e.Italic)
+                   .HasDefaultValue(false);
+                entity.Property(e => e.Underline)
+                   .HasDefaultValue(false);
+            });
         }
 
         public override int SaveChanges()

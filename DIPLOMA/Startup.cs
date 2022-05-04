@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 
+using Stripe;
+using Stripe.Checkout;
 namespace DIPLOMA
 {
     public class Startup
@@ -47,10 +49,13 @@ namespace DIPLOMA
             services.AddControllersWithViews().AddControllersAsServices();
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSignalR();
+            services.AddSignalR().AddNewtonsoftJsonProtocol(opt => {
+                opt.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            }); ;
             services.AddScoped<IRefreshModelService, RefreshModelService>();
             services.AddScoped<DonateHub>();
             services.AddHttpContextAccessor();
+            //services.AddMvc().AddNewtonsoftJson();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

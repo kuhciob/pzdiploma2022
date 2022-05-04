@@ -14,6 +14,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Stripe;
+using Stripe.BillingPortal;
+using Stripe.Checkout;
+using Newtonsoft.Json;
 
 namespace DIPLOMA.Controllers
 {
@@ -64,23 +67,141 @@ namespace DIPLOMA.Controllers
             return View();
         }
 
-       
+        [HttpPost("create-checkout-session")]
+        public ActionResult CreateCheckoutSession()
+        {
+            var session = CreateCheckoutSession();
+            return new StatusCodeResult(303);
+        }
+        public Stripe.Checkout.Session CreateCheckoutSession(DonateMsg donateMsg)
+        {
+            string domainName = $"{this.Request.Scheme}://{this.Request.Host}";
+            StripeConfiguration.ApiKey = "sk_test_4eC39HqLyjWDarjtT1zdp7dc";
 
+            var options = new Stripe.Checkout.SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>
+                {
+                    new SessionLineItemOptions
+                    {
+                        PriceData = new SessionLineItemPriceDataOptions
+                        {
+                            //UnitAmount = Convert.ToInt64( donateMsg.Amount.GetValueOrDefault() * 100),
+                            UnitAmountDecimal = donateMsg.Amount * 100,
+                            Currency = "usd",
+                            ProductData = new SessionLineItemPriceDataProductDataOptions
+                            {
+                                Name = "Donate",
+                                //Images = 
+                            },
+
+                        },
+                        Quantity = 1,
+                    },
+                },
+                Mode = "payment",
+                SuccessUrl = domainName + "/Donate/success?session_id={CHECKOUT_SESSION_ID}",
+                
+                CancelUrl = domainName + "/Donate/cancel?session_id={CHECKOUT_SESSION_ID}",
+            };
+            
+
+            var service = new Stripe.Checkout.SessionService();
+            Stripe.Checkout.Session session = service.Create(options);
+            Response.Headers.Add("Location", session.Url);
+
+            session.Metadata.Add("TESTMETA", "HELLO!");
+            return session;
+        }
+
+        [HttpPost()]
+        [AllowAnonymous]
+        public async Task<IActionResult> SendToHub(DonateMsg donateMsg)
+        {
+            await _donateHub.Clients.Group(donateMsg.UserID).SendAsync("ReceiveMessage", donateMsg);
+            return Ok();
+        }
         // POST: DonateMsgs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Donate/{username}")]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
-        public async Task<IActionResult> Create([Bind("ID,UserID,Amount,DonatorName,Message")] DonateMsg donateMsg)
+        public async Task<IActionResult> Create(DonateMsg donateMsg)
         {
             if (ModelState.IsValid)
             {
+                var session = CreateCheckoutSession(donateMsg);
+
+                donateMsg.CheckoutSessionID = session.Id;
                 donateMsg.CreatedDate = DateTime.Now;
                 _context.Add(donateMsg);
                 await _context.SaveChangesAsync();
-                await _donateHub.Clients.Group(donateMsg.UserID).SendAsync("ReceiveMessage", donateMsg);
-                //await _donateHub.Clients.All.SendAsync("ReceiveMessage", donateMsg);
+
+                //session.Metadata.Add("DonateMsgID", donateMsg.ID.GetValueOrDefault().ToString());
+                return new StatusCodeResult(303);
+
+                //await _donateHub.Clients.Group(donateMsg.UserID).SendAsync("ReceiveMessage", donateMsg);
+                ////await _donateHub.Clients.All.SendAsync("ReceiveMessage", donateMsg);
+                //List<FundraisingWidget> fundrasingWidgets = await _context.FundraisingWidget.
+                //    Where(r => r.UserID == donateMsg.UserID
+                //    && r.Active == true).
+                //    ToListAsync();
+
+                try
+                {
+                    //foreach (var item in fundrasingWidgets)
+                    //{
+                    //    item.CollectedAmt = item.CollectedAmt.GetValueOrDefault() + donateMsg.Amount;
+                    //    _context.Update(item);
+                    //}
+                    //await _context.SaveChangesAsync();
+                }
+                catch(Exception ex)
+                {
+
+                }
+                
+
+                return RedirectToAction(nameof(Create));
+            }
+            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", donateMsg.UserID);
+
+
+            return View(donateMsg);
+        }
+        [HttpGet("Donate/success")]
+        [AllowAnonymous]
+        public async Task<IActionResult> DonateSuccess([FromQuery] string session_id)
+        {
+            var sessionService = new Stripe.Checkout.SessionService();
+            Stripe.Checkout.Session session = sessionService.Get(session_id);
+
+            var customerService = new CustomerService();
+            Customer customer = customerService.Get(session.CustomerId);
+
+            DonateMsg donateMsg = await _context.DonateMsg
+                .Include(i => i.User)
+                .FirstOrDefaultAsync(m => m.CheckoutSessionID == session_id);
+
+            if (donateMsg == null)
+            {
+                return Content($"<html><body><h1>Ups... Something Go wrong :(</h1></body></html>");
+
+            }
+            else
+            {
+                donateMsg.CheckoutSessionSucceed = true;
+               
+
+                if(donateMsg.Read == false)
+                {
+                    await _donateHub.Clients.Group(donateMsg.UserID).SendAsync("ReceiveMessage", donateMsg);
+                    //donateMsg.Read = true;
+                }
+                _context.Update(donateMsg);
+                await _context.SaveChangesAsync();
+
                 List<FundraisingWidget> fundrasingWidgets = await _context.FundraisingWidget.
                     Where(r => r.UserID == donateMsg.UserID
                     && r.Active == true).
@@ -95,21 +216,36 @@ namespace DIPLOMA.Controllers
                     }
                     await _context.SaveChangesAsync();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
 
                 }
                 
+                return View();
 
-                return RedirectToAction(nameof(Create));
             }
-            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", donateMsg.UserID);
-            
-            
-
-            return View(donateMsg);
         }
-        
+        [HttpGet("Donate/cancel")]
+        [AllowAnonymous]
+        public async Task<ActionResult> DonateCancelAsync([FromQuery] string session_id)
+        {
+            var donateMsg = await _context.DonateMsg
+                .Include(i => i.User)
+                .FirstOrDefaultAsync(m => m.CheckoutSessionID == session_id);
+
+            if (donateMsg == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                donateMsg.CheckoutSessionSucceed = false;
+                _context.DonateMsg.Remove(donateMsg);
+                await _context.SaveChangesAsync();
+                return Content($"<html><body><h1>Donate waw cance!</h1></body></html>");
+
+            }
+        }
 
         public async Task<IActionResult> Details(int? id)
         {
@@ -143,7 +279,7 @@ namespace DIPLOMA.Controllers
         //    return View(new DonateMsg() { UserID = userid });
         //}
         // GET: DonateMsgs/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -164,7 +300,7 @@ namespace DIPLOMA.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,UserID,Amount,DonatorName,Message,Date")] DonateMsg donateMsg)
+        public async Task<IActionResult> Edit(int? id,  DonateMsg donateMsg)
         {
             if (id != donateMsg.ID)
             {
@@ -225,7 +361,7 @@ namespace DIPLOMA.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DonateMsgExists(int id)
+        private bool DonateMsgExists(int? id)
         {
             return _context.DonateMsg.Any(e => e.ID == id);
         }

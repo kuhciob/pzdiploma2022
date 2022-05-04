@@ -1,0 +1,63 @@
+﻿@model DIPLOMA.Models.FundraisingWidget
+@using System.Linq
+
+@{
+    Layout = "~/Views/Shared/_DisplayWidgetLayout.cshtml";
+
+
+}
+<script>
+    setTimeout(function () { location.reload() }, 10000);
+</script>
+<div style="
+    @Model.TextStyle.TextStyleCss
+    display: flex; 
+    flex-direction: column;
+    justify-content: space-between; 
+    align-items: center;">
+    <div>@Model.ProgressPercent%</div>
+    <div id="widget" style="
+            width: 100%; 
+            display: flex; 
+            flex-direction: row; 
+            justify-content: space-between;" >
+        <div id="Indicator" style="@Model.IndicatorStyle;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;">
+            <div id="IndicatorGot" style="@Model.IndicatorGotStyle">
+
+            </div>
+            <div id="IndicatorLeft" style="@Model.IndicatorLeftStyle">
+
+            </div>
+
+        </div>
+        <div id="text" style="@Model.DigitsStyle;
+        position: absolute;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        padding-left: 10px;
+        padding-right: 10px;
+        align-items: center;
+        left:0;
+        right:0;
+        height: @(Model.Height.ToString()+"px");
+        justify-content: space-between;
+        box-sizing: border-box;
+">
+            <div id="start" style="padding-left:10px">
+                @(Convert.ToInt32(Model.CollectedAmt))
+            </div>
+            <div style="display: none;"> </div>
+            <div id="end" style="padding-right:10px">
+                @Convert.ToInt32(Model.TargetAmt)
+
+            </div>
+        </div>
+    </div>
+    
+
+</div>

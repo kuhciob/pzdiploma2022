@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,6 +11,9 @@ namespace DIPLOMA.Models
 {
     public class DonateMsg : BaseModel
     {
+        //[Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //public int ID { get; set; }
         public int? ID { get; set; }
         [Required]
         public string UserID { get; set; }
@@ -27,6 +31,11 @@ namespace DIPLOMA.Models
         [Display(Name = "Read")]
         public bool Read { get; set; }
 
+        [Display(Name = "CHECKOUT_SESSION_ID")]
+        public string CheckoutSessionID{ get; set; }
+
+        [Display(Name = "CheckoutSessionSucceed")]
+        public bool CheckoutSessionSucceed { get; set; }
 
         public ApplicationUser User { get; set; }
     }

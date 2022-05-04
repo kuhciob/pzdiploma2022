@@ -19,113 +19,114 @@
 
 </script>
 
-@if (Model.DisplayTypeCD == SWDisplayModeConstants.List)
+<div class="p-2" style="@Model.SWidget.TextStyle?.TextStyleCss">
+    @if (Model.DisplayTypeCD == SWDisplayModeConstants.List)
 
-{
-    <script>
-        setTimeout(function () {
-            window.location.reload(1);
-        }, scrollingSpeed * 1000 * 5);
-    </script>
-    @foreach (var item in Model.DonateMsgs)
     {
-        <h3>
-            @Html.Raw(Model.SWidget.HeaderText.
-        Replace("{amount}", item.Amount.GetValueOrDefault().ToString("#.##")).
-        Replace("{user}", item.DonatorName))
-        </h3>
-        continue;
-
-        @if (item.DonatorName == null)
-        {
-            <h3>@Html.Raw(item.Amount.GetValueOrDefault().ToString("#.##"))</h3>
-
-        }
-        else
-     if (item.Amount == null)
-        {
-            <h3>@Html.Raw(item.DonatorName)</h3>
-
-        }
-        else
+        <script>
+            setTimeout(function () {
+                window.location.reload(1);
+            }, scrollingSpeed * 1000 * 5);
+        </script>
+        @foreach (var item in Model.DonateMsgs)
         {
             <h3>
                 @Html.Raw(Model.SWidget.HeaderText.
             Replace("{amount}", item.Amount.GetValueOrDefault().ToString("#.##")).
             Replace("{user}", item.DonatorName))
             </h3>
+            continue;
+
+            @if (item.DonatorName == null)
+            {
+                <h3>@Html.Raw(item.Amount.GetValueOrDefault().ToString("#.##"))</h3>
+
+            }
+            else
+       if (item.Amount == null)
+            {
+                <h3>@Html.Raw(item.DonatorName)</h3>
+
+            }
+            else
+            {
+                <h3>
+                    @Html.Raw(Model.SWidget.HeaderText.
+                Replace("{amount}", item.Amount.GetValueOrDefault().ToString("#.##")).
+                Replace("{user}", item.DonatorName))
+                </h3>
+
+            }
 
         }
 
     }
-
-}
-else
-if (Model.DisplayTypeCD == SWDisplayModeConstants.СreepingLine)
-{
-    <script>
-        setTimeout(function () {
-            window.location.reload(1);
-        }, scrollingSpeed * 1000 * 10 * elCount);
-    </script>
-    <marquee direction = @Html.Raw(Json.Serialize(Model.SWidget.Direction.Value.Trim())) scrollamount="@Html.Raw(Json.Serialize(@Model.SWidget.ScrollingSpeed))"  >
-        <ul class="list-inline">
-            @foreach (var item in Model.DonateMsgs)
-            {
-                if (Model.SWidget.Direction.CD == SWDirectionConstants.LeftRight
-                    || Model.SWidget.Direction.CD == SWDirectionConstants.RightLeft)
+    else
+  if (Model.DisplayTypeCD == SWDisplayModeConstants.СreepingLine)
+    {
+        <script>
+            setTimeout(function () {
+                window.location.reload(1);
+            }, scrollingSpeed * 1000 * 10 * elCount);
+        </script>
+        <marquee direction=@Html.Raw(Json.Serialize(Model.SWidget.Direction.Value.Trim())) scrollamount="@Html.Raw(Json.Serialize(@Model.SWidget.ScrollingSpeed))">
+            <ul class="list-inline">
+                @foreach (var item in Model.DonateMsgs)
                 {
+                    if (Model.SWidget.Direction.CD == SWDirectionConstants.LeftRight
+                        || Model.SWidget.Direction.CD == SWDirectionConstants.RightLeft)
+                    {
                         <li class="list-inline-item">
                             <h3>
-                        @Html.Raw(Model.SWidget.HeaderText.
-               Replace("{amount}", item.Amount.GetValueOrDefault().ToString("#.##")).
-               Replace("{user}", item.DonatorName))
-                    </h3>
+                                @Html.Raw(Model.SWidget.HeaderText.
+                       Replace("{amount}", item.Amount.GetValueOrDefault().ToString("#.##")).
+                       Replace("{user}", item.DonatorName))
+                            </h3>
                         </li>
+                    }
+                    else
+                    {
+                        <h3>
+                            @Html.Raw(Model.SWidget.HeaderText.
+                   Replace("{amount}", item.Amount.GetValueOrDefault().ToString("#.##")).
+                   Replace("{user}", item.DonatorName))
+                        </h3>
+                    }
+
+
+                    continue;
+
+                    @if (item.DonatorName == null)
+                    {
+                        <h3>@Html.Raw(item.Amount.GetValueOrDefault().ToString("#.##"))</h3>
+
+                    }
+                    else
+          if (item.Amount == null)
+                    {
+
+                        <h3>@Html.Raw(item.DonatorName)</h3>
+
+                    }
+                    else
+                    {
+
+                        <h3>
+                            @Html.Raw(Model.SWidget.HeaderText.
+                   Replace("{amount}", item.Amount.GetValueOrDefault().ToString("#.##")).
+                   Replace("{user}", item.DonatorName))
+                        </h3>
+                    }
                 }
-                else
-                {
-                    <h3>
-                        @Html.Raw(Model.SWidget.HeaderText.
-               Replace("{amount}", item.Amount.GetValueOrDefault().ToString("#.##")).
-               Replace("{user}", item.DonatorName))
-                    </h3>
-                }
+            </ul>
 
+        </marquee>
 
-                continue;
-
-                @if (item.DonatorName == null)
-                {
-                    <h3>@Html.Raw(item.Amount.GetValueOrDefault().ToString("#.##"))</h3>
-
-                }
-                else
-        if (item.Amount == null)
-                {
-
-                    <h3>@Html.Raw(item.DonatorName)</h3>
-
-                }
-                else
-                {
-
-                    <h3>
-                        @Html.Raw(Model.SWidget.HeaderText.
-               Replace("{amount}", item.Amount.GetValueOrDefault().ToString("#.##")).
-               Replace("{user}", item.DonatorName))
-                    </h3>
-                }
-            }
-        </ul>
-        
-    </marquee>
-
-}
-else
-if (Model.DisplayTypeCD == SWDisplayModeConstants.Slider)
-{
-<script>
+    }
+    else
+  if (Model.DisplayTypeCD == SWDisplayModeConstants.Slider)
+    {
+        <script>
     var headerTextTemplate = @Html.Raw(Json.Serialize(@Model.SWidget.HeaderText));
     var donateMsgs = @Html.Raw(Json.Serialize(@Model.DonateMsgs));
 
@@ -162,10 +163,11 @@ if (Model.DisplayTypeCD == SWDisplayModeConstants.Slider)
 
     function displayContent() {
         for (let i = 0; i < donateMsgs.length; ++i) {
-            
+
         }
     }
-</script>
-    <h3 id="slidercontent"> </h3>
-}
+        </script>
+        <h3 id="slidercontent"> </h3>
+    }
 
+</div>

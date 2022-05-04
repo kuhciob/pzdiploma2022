@@ -4,14 +4,16 @@ using DIPLOMA.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DIPLOMA.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220501094159_AddPayment")]
+    partial class AddPayment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,6 +102,8 @@ namespace DIPLOMA.Data.Migrations
                     b.Property<int?>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
+                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
+                        .HasAnnotation("SqlServer:IdentitySeed", 1)
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<decimal?>("Amount")
@@ -205,11 +209,8 @@ namespace DIPLOMA.Data.Migrations
 
                     b.Property<decimal?>("TargetAmt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(18, 4)")
+                        .HasColumnType("decimal(18,2)")
                         .HasDefaultValue(0m);
-
-                    b.Property<int?>("TextStyleID")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -223,8 +224,6 @@ namespace DIPLOMA.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("TextStyleID");
 
                     b.HasIndex("UserID");
 
@@ -268,23 +267,20 @@ namespace DIPLOMA.Data.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.Property<bool?>("RandomContent")
+                    b.Property<bool>("RandomContent")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<bool?>("ReadHeader")
+                    b.Property<bool>("ReadHeader")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<bool?>("ReadMessage")
+                    b.Property<bool>("ReadMessage")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
-
-                    b.Property<int?>("TextStyleID")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -298,8 +294,6 @@ namespace DIPLOMA.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("TextStyleID");
 
                     b.HasIndex("UserID");
 
@@ -370,36 +364,36 @@ namespace DIPLOMA.Data.Migrations
                         {
                             ID = 1,
                             CD = "RL",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 577, DateTimeKind.Local).AddTicks(5356),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 89, DateTimeKind.Local).AddTicks(271),
                             Description = "Right -> Left",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 577, DateTimeKind.Local).AddTicks(5433),
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 89, DateTimeKind.Local).AddTicks(373),
                             Value = "left"
                         },
                         new
                         {
                             ID = 2,
                             CD = "LR",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 577, DateTimeKind.Local).AddTicks(6103),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 89, DateTimeKind.Local).AddTicks(909),
                             Description = "Left -> Right",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 577, DateTimeKind.Local).AddTicks(6120),
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 89, DateTimeKind.Local).AddTicks(923),
                             Value = "right"
                         },
                         new
                         {
                             ID = 3,
                             CD = "TB",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 577, DateTimeKind.Local).AddTicks(6143),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 89, DateTimeKind.Local).AddTicks(946),
                             Description = "Top -> Bottom",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 577, DateTimeKind.Local).AddTicks(6151),
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 89, DateTimeKind.Local).AddTicks(952),
                             Value = "down"
                         },
                         new
                         {
                             ID = 4,
                             CD = "BT",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 577, DateTimeKind.Local).AddTicks(6157),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 89, DateTimeKind.Local).AddTicks(959),
                             Description = "Bottom -> Top",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 577, DateTimeKind.Local).AddTicks(6163),
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 89, DateTimeKind.Local).AddTicks(964),
                             Value = "up"
                         });
                 });
@@ -436,25 +430,25 @@ namespace DIPLOMA.Data.Migrations
                         {
                             ID = 1,
                             CD = "LL",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 562, DateTimeKind.Local).AddTicks(1218),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 76, DateTimeKind.Local).AddTicks(6841),
                             Description = "List",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 570, DateTimeKind.Local).AddTicks(3766)
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 81, DateTimeKind.Local).AddTicks(1936)
                         },
                         new
                         {
                             ID = 2,
                             CD = "CL",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 570, DateTimeKind.Local).AddTicks(5278),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 81, DateTimeKind.Local).AddTicks(3374),
                             Description = "Сreeping line",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 570, DateTimeKind.Local).AddTicks(5310)
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 81, DateTimeKind.Local).AddTicks(3410)
                         },
                         new
                         {
                             ID = 3,
                             CD = "SL",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 570, DateTimeKind.Local).AddTicks(5352),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 81, DateTimeKind.Local).AddTicks(3456),
                             Description = "Slider",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 570, DateTimeKind.Local).AddTicks(5359)
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 81, DateTimeKind.Local).AddTicks(3462)
                         });
                 });
 
@@ -490,73 +484,73 @@ namespace DIPLOMA.Data.Migrations
                         {
                             ID = 1,
                             CD = "TD",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8643),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5527),
                             Description = "Today",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8711)
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5595)
                         },
                         new
                         {
                             ID = 2,
                             CD = "AT",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8755),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5638),
                             Description = "All time",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8762)
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5645)
                         },
                         new
                         {
                             ID = 3,
                             CD = "TW",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8769),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5652),
                             Description = "This week",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8775)
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5658)
                         },
                         new
                         {
                             ID = 4,
                             CD = "7D",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8782),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5664),
                             Description = "Last 7 days",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8788)
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5670)
                         },
                         new
                         {
                             ID = 5,
                             CD = "TM",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8795),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5676),
                             Description = "This month",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8801)
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5681)
                         },
                         new
                         {
                             ID = 6,
                             CD = "30",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8808),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5687),
                             Description = "Last 30 Days",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8813)
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5692)
                         },
                         new
                         {
                             ID = 7,
                             CD = "TY",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8820),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5698),
                             Description = "This Year",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8826)
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5703)
                         },
                         new
                         {
                             ID = 8,
                             CD = "LY",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8833),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5708),
                             Description = "Last Year",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8838)
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5713)
                         },
                         new
                         {
                             ID = 9,
                             CD = "24",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8845),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5719),
                             Description = "Last 24 hours",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 575, DateTimeKind.Local).AddTicks(8851)
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 87, DateTimeKind.Local).AddTicks(5724)
                         });
                 });
 
@@ -592,25 +586,25 @@ namespace DIPLOMA.Data.Migrations
                         {
                             ID = 1,
                             CD = "TP",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 573, DateTimeKind.Local).AddTicks(9533),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 85, DateTimeKind.Local).AddTicks(1438),
                             Description = "Top",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 573, DateTimeKind.Local).AddTicks(9604)
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 85, DateTimeKind.Local).AddTicks(1503)
                         },
                         new
                         {
                             ID = 2,
                             CD = "LD",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 573, DateTimeKind.Local).AddTicks(9658),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 85, DateTimeKind.Local).AddTicks(1566),
                             Description = "Last Donater",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 573, DateTimeKind.Local).AddTicks(9665)
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 85, DateTimeKind.Local).AddTicks(1580)
                         },
                         new
                         {
                             ID = 3,
                             CD = "CA",
-                            CreatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 573, DateTimeKind.Local).AddTicks(9673),
+                            CreatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 85, DateTimeKind.Local).AddTicks(1594),
                             Description = "Collected  amount",
-                            UpdatedDate = new DateTime(2022, 5, 2, 10, 58, 42, 573, DateTimeKind.Local).AddTicks(9678)
+                            UpdatedDate = new DateTime(2022, 5, 1, 12, 41, 58, 85, DateTimeKind.Local).AddTicks(1607)
                         });
                 });
 
@@ -645,9 +639,6 @@ namespace DIPLOMA.Data.Migrations
                     b.Property<int>("ScrollingSpeed")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TextStyleID")
-                        .HasColumnType("int");
-
                     b.Property<int>("TimeIntervalID")
                         .HasColumnType("int");
 
@@ -671,8 +662,6 @@ namespace DIPLOMA.Data.Migrations
 
                     b.HasIndex("DisplayModeID");
 
-                    b.HasIndex("TextStyleID");
-
                     b.HasIndex("TimeIntervalID");
 
                     b.HasIndex("UserID");
@@ -680,62 +669,6 @@ namespace DIPLOMA.Data.Migrations
                     b.HasIndex("WidgetTypeID");
 
                     b.ToTable("StatisticWidget");
-                });
-
-            modelBuilder.Entity("DIPLOMA.Models.TextStyle", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AnimationName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("Bold")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Font")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FontFamily")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("FontSize")
-                        .HasColumnType("int");
-
-                    b.Property<bool?>("Italic")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<int?>("LetterSpacing")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TextColorHex")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(7)")
-                        .HasDefaultValue("#ffffff");
-
-                    b.Property<bool?>("Underline")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("WordSpacing")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("TextStyle");
                 });
 
             modelBuilder.Entity("DIPLOMA.Models.UploadFile", b =>
@@ -912,10 +845,6 @@ namespace DIPLOMA.Data.Migrations
 
             modelBuilder.Entity("DIPLOMA.Models.FundraisingWidget", b =>
                 {
-                    b.HasOne("DIPLOMA.Models.TextStyle", "TextStyle")
-                        .WithMany("FundraisingWidgets")
-                        .HasForeignKey("TextStyleID");
-
                     b.HasOne("DIPLOMA.Models.ApplicationUser", "User")
                         .WithMany("FundraisingWidgets")
                         .HasForeignKey("UserID")
@@ -924,10 +853,6 @@ namespace DIPLOMA.Data.Migrations
 
             modelBuilder.Entity("DIPLOMA.Models.MsgWidget", b =>
                 {
-                    b.HasOne("DIPLOMA.Models.TextStyle", "TextStyle")
-                        .WithMany("MsgWidgets")
-                        .HasForeignKey("TextStyleID");
-
                     b.HasOne("DIPLOMA.Models.ApplicationUser", "User")
                         .WithMany("MsgWidgets")
                         .HasForeignKey("UserID")
@@ -962,10 +887,6 @@ namespace DIPLOMA.Data.Migrations
                         .WithMany("StatisticWidgets")
                         .HasForeignKey("DisplayModeID")
                         .IsRequired();
-
-                    b.HasOne("DIPLOMA.Models.TextStyle", "TextStyle")
-                        .WithMany("StatisticWidgets")
-                        .HasForeignKey("TextStyleID");
 
                     b.HasOne("DIPLOMA.Models.StatWidgetTimeIntervalType", "TimeInterval")
                         .WithMany("StatisticWidgets")

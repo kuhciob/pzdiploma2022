@@ -1,0 +1,146 @@
+﻿@model DIPLOMA.Models.Widget
+<script>
+    function displayTextStyle(button) {
+        let textPanelStyle = document.getElementById("TextStylePanel");
+        repaintExample();
+
+        if (textPanelStyle.style.display == "none") {
+            textPanelStyle.style.display = "";
+
+        }
+        else {
+            textPanelStyle.style.display = "none";
+        }
+    }
+    function repaintExample() {
+        let displayText = document.getElementById("displaytext");
+
+        if (document.getElementById("TextStyle_Bold").checked) {
+            displayText.style.fontWeight = "bold";
+        }
+        else
+        {
+            displayText.style.fontWeight = "normal";
+        }
+        if (document.getElementById("TextStyle_Italic").checked) {
+            displayText.style.fontStyle = "italic";
+        }
+        else {
+            displayText.style.fontStyle = "";
+
+        }
+        if (document.getElementById("TextStyle_Underline").checked) {
+            displayText.style.textDecorationLine = "underline";
+        }
+        else{
+            displayText.style.textDecorationLine = "";
+
+        }
+        displayText.style.fontSize = document.getElementById("TextStyle_FontSize").value + "px";
+        displayText.style.letterSpacing = document.getElementById("TextStyle_LetterSpacing").value + "px"; 
+        displayText.style.wordSpacing = document.getElementById("TextStyle_WordSpacing").value + "px";
+
+        displayText.style.fontFamily = document.getElementById("TextStyle_FontFamily").value;
+       // displayText.style.font = document.getElementById("TextStyle_Font").value;
+        displayText.style.color = document.getElementById("TextStyle_TextColorHex").value;
+
+        //console.log(displayText.style)
+
+    }
+</script>
+<div class="form-group">
+    <input class="btn btn-outline-secondary" type="button" onclick="displayTextStyle(this)" value="Text Style" />
+
+</div>
+<div class="row" >
+    <div class="col-8 p-3"
+         style="        display: none;
+        position: absolute;
+        background-color: whitesmoke;
+        top: 30px;
+        width: 500px;
+        border-radius: 10px;
+" id="TextStylePanel">
+        <div class="form-group">
+            <h2 id="displaytext">This is text for example!</h2>
+        </div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group form-check  form-switch">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="TextStyle.Bold" onchange="repaintExample()"/> @Html.DisplayNameFor(model => model.TextStyle.Bold)
+            </label>
+            <span asp-validation-for="TextStyle.Bold" class="text-danger"></span>
+
+        </div>
+        <div class="form-group form-check  form-switch">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="TextStyle.Italic" onchange="repaintExample()"/> @Html.DisplayNameFor(model => model.TextStyle.Italic)
+            </label>
+            <span asp-validation-for="TextStyle.Italic" class="text-danger"></span>
+
+        </div>
+        <div class="form-group form-check  form-switch">
+            <label class="form-check-label">
+                <input class="form-check-input" asp-for="TextStyle.Underline" onchange="repaintExample()"/> @Html.DisplayNameFor(model => model.TextStyle.Underline)
+            </label>
+            <span asp-validation-for="TextStyle.Underline" class="text-danger"></span>
+
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-3">
+                    <label asp-for="TextStyle.TextColorHex" class="control-label"></label>
+                </div>
+                <div class="col-9">
+                    <input asp-for="TextStyle.TextColorHex" type="color" class="form-control-color" onchange="repaintExample()" />
+                </div>
+            </div>
+            <span asp-validation-for="TextStyle.TextColorHex" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="TextStyle.LetterSpacing" class="control-label"></label>
+            <input asp-for="TextStyle.LetterSpacing" class="form-control" onchange="repaintExample()" />
+            <span asp-validation-for="TextStyle.LetterSpacing" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="TextStyle.WordSpacing" class="control-label"></label>
+            <input asp-for="TextStyle.WordSpacing" class="form-control" onchange="repaintExample()"/>
+            <span asp-validation-for="TextStyle.WordSpacing" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="TextStyle.FontSize" class="control-label"></label>
+            <input asp-for="TextStyle.FontSize" class="form-control" onchange="repaintExample()"/>
+            <span asp-validation-for="TextStyle.FontSize" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label"></label>
+            <label asp-for="TextStyle.FontFamily" class="control-label"></label>
+
+            <select asp-for="TextStyle.FontFamily" class="form-select" onchange="repaintExample()">
+                <option>courier</option>
+                <option>serif</option>
+                <option>sans-serif</option>
+                <option>arial</option>
+                <option>monospace</option>
+                <option>cursive</option>
+                <option>fantasy</option>
+                <option>system-ui</option>
+            </select>
+            <span asp-validation-for="TextStyle.FontFamily" class="text-danger"></span>
+        </div>
+
+        @*<div class="form-group">
+            <label asp-for="TextStyle.Font" class="control-label"></label>
+            <input asp-for="TextStyle.Font" class="form-control"  onchange="repaintExample()"/>
+            <span asp-validation-for="TextStyle.Font" class="text-danger"></span>
+        </div>*@
+       
+
+        <div class="form-group">
+            <input type="button" value="Ok" class="btn btn-primary" onclick="displayTextStyle(this)" />
+        </div>
+    </div>
+</div>
+
+

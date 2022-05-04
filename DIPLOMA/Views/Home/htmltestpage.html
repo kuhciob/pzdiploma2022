@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <input type="color" id="favcolor" name="favcolor" value="#ff0000">
+    <br>
+    <br>
+    <button type="button" onclick="testbutton()"> TEST</button>
+
+    <script>
+
+        function testbutton() {
+            let foo = document.getElementById('favcolor').value;
+
+            console.log(typeof foo)
+        }
+    </script>
+</body>
+</html>

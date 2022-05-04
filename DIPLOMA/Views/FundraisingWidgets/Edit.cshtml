@@ -1,0 +1,29 @@
+﻿@model DIPLOMA.Models.FundraisingWidget
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_PanelLayout.cshtml";
+    ViewData["ActivePage"] = DIPLOMA.Views.Panel.PanelNavPages.Fundraising;
+
+}
+
+<h1>Edit</h1>
+
+<h4>FundraisingWidget</h4>
+<hr />
+<div class="row">
+    <div class="col">
+        <form asp-action="Edit">
+            @await Html.PartialAsync("~/Views/FundraisingWidgets/_FundraisingWidgetForm.cshtml", Model)
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

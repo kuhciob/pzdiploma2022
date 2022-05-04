@@ -1,88 +1,92 @@
 ﻿@model DIPLOMA.Models.StatisticWidget
 
-
-<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-<div class="form-group">
-    <label asp-for="Name" class="control-label"></label>
-    <input asp-for="Name" class="form-control" />
-    <span asp-validation-for="Name" class="text-danger"></span>
-</div>
-
-<div class="form-group">
-
-    <label asp-for="HeaderText" class="control-label"></label>
-    <input asp-for="HeaderText" class="form-control" />
-    <small id="showUserText" class="form-text text-muted">
-        <div class="mt-2 mb-1">
-            Allowed :
-            <u>{user}</u>
-            <u>{amount}</u>
-            <br>
-            <strong>For example:</strong> {user} donate {amount}$
+<div class="row">
+    <div class="col-8">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
-    </small>
-    <span asp-validation-for="HeaderText" class="text-danger"></span>
-</div>
+
+        <div class="form-group">
+
+            <label asp-for="HeaderText" class="control-label"></label>
+            <input asp-for="HeaderText" class="form-control" />
+            <small id="showUserText" class="form-text text-muted">
+                <div class="mt-2 mb-1">
+                    Allowed :
+                    <u>{user}</u>
+                    <u>{amount}</u>
+                    <br>
+                    <strong>For example:</strong> {user} donate {amount}$
+                </div>
+            </small>
+            <span asp-validation-for="HeaderText" class="text-danger"></span>
+        </div>
+
+        @await Html.PartialAsync("~/Views/Shared/_TextStyleForm.cshtml", Model)
+
+        <div class="form-group">
+            <label asp-for="WidgetTypeID" class="control-label"></label>
+            <select asp-for="WidgetTypeID" class="form-control" asp-items="ViewBag.WidgetTypeID"></select>
+            <span asp-validation-for="WidgetTypeID" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="DisplayModeID" class="control-label"></label>
+            <select asp-for="DisplayModeID" class="form-control" asp-items="ViewBag.DisplayModeID" onchange=""></select>
+            <span asp-validation-for="DisplayModeID" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="DirectionID" class="control-label"></label>
+            <select asp-for="DirectionID" class="form-control" asp-items="ViewBag.DirectionID"></select>
+            <span asp-validation-for="DirectionID" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="TimeIntervalID" class="control-label"></label>
+            <select asp-for="TimeIntervalID" class="form-control" asp-items="ViewBag.TimeIntervalID"></select>
+            <span asp-validation-for="TimeIntervalID" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ElementsCount" class="control-label"></label>
+            <input asp-for="ElementsCount" class="form-control" />
+            <span asp-validation-for="ElementsCount" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ScrollingSpeed" class="control-label"></label>
+            <div class="range-control">
+                <input asp-for="ScrollingSpeed" class="form-range" type="range" min="0" max="10" />
 
 
-<div class="form-group">
-    <label asp-for="WidgetTypeID" class="control-label"></label>
-    <select asp-for="WidgetTypeID" class="form-control" asp-items="ViewBag.WidgetTypeID"></select>
-    <span asp-validation-for="WidgetTypeID" class="text-danger"></span>
-</div>
-<div class="form-group">
-    <label asp-for="DisplayModeID" class="control-label"></label>
-    <select asp-for="DisplayModeID" class="form-control" asp-items="ViewBag.DisplayModeID" onchange=""></select>
-    <span asp-validation-for="DisplayModeID" class="text-danger"></span>
-</div>
-
-<div class="form-group">
-    <label asp-for="DirectionID" class="control-label"></label>
-    <select asp-for="DirectionID" class="form-control" asp-items="ViewBag.DirectionID"></select>
-    <span asp-validation-for="DirectionID" class="text-danger"></span>
-</div>
-<div class="form-group">
-    <label asp-for="TimeIntervalID" class="control-label"></label>
-    <select asp-for="TimeIntervalID" class="form-control" asp-items="ViewBag.TimeIntervalID"></select>
-    <span asp-validation-for="TimeIntervalID" class="text-danger"></span>
-</div>
-<div class="form-group">
-    <label asp-for="ElementsCount" class="control-label"></label>
-    <input asp-for="ElementsCount" class="form-control" />
-    <span asp-validation-for="ElementsCount" class="text-danger"></span>
-</div>
-<div class="form-group">
-    <label asp-for="ScrollingSpeed" class="control-label"></label>
-    <div class="range-control">
-        <input asp-for="ScrollingSpeed" class="form-range" type="range" min="0" max="10" />
+                <output name="rangeVal"></output>
+            </div>
+            <span asp-validation-for="ScrollingSpeed" class="text-danger"></span>
+        </div>
+        <input type="hidden" asp-for="ID" />
+        <input type="hidden" asp-for="UserID" />
+        <input type="hidden" asp-for="CreatedDate" />
+        <input type="hidden" asp-for="UpdatedDate" />
 
 
-        <output name="rangeVal"></output>
+        <div class="form-group" style="display:none">
+            <label asp-for="UserID" class="control-label"></label>
+            <span asp-validation-for="UserID" class="text-danger"></span>
+        </div>
+
+        <div class="form-group" style="display:none">
+            <label asp-for="Url" class="control-label"></label>
+            <input asp-for="Url" class="form-control" />
+            <span asp-validation-for="Url" class="text-danger"></span>
+        </div>
+
+        <div class="form-group" style="display:none">
+            <label asp-for="CreatedDate" class="control-label"></label>
+            <span asp-validation-for="CreatedDate" class="text-danger"></span>
+        </div>
+        <div class="form-group" style="display:none">
+            <label asp-for="UpdatedDate" class="control-label"></label>
+            <span asp-validation-for="UpdatedDate" class="text-danger"></span>
+        </div>
     </div>
-    <span asp-validation-for="ScrollingSpeed" class="text-danger"></span>
-</div>
-<input type="hidden" asp-for="ID" />
-<input type="hidden" asp-for="UserID" />
-<input type="hidden" asp-for="CreatedDate"  />
-<input type="hidden" asp-for="UpdatedDate"  />
-
-
-<div class="form-group" style="display:none">
-    <label asp-for="UserID" class="control-label"></label>
-    <span asp-validation-for="UserID" class="text-danger"></span>
-</div>
-
-<div class="form-group" style="display:none">
-    <label asp-for="Url" class="control-label"></label>
-    <input asp-for="Url" class="form-control" />
-    <span asp-validation-for="Url" class="text-danger"></span>
-</div>
-
-<div class="form-group" style="display:none">
-    <label asp-for="CreatedDate" class="control-label"></label>
-    <span asp-validation-for="CreatedDate" class="text-danger"></span>
-</div>
-<div class="form-group" style="display:none">
-    <label asp-for="UpdatedDate" class="control-label"></label>
-    <span asp-validation-for="UpdatedDate" class="text-danger"></span>
 </div>

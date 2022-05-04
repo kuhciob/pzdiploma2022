@@ -14,6 +14,8 @@ namespace DIPLOMA.Models.ViewModels
     public class DisplayMsgViewModel
     {
         public MsgWidget MWidget { get; set; }
+        public TextStyle TextStyle { get; set; }
+
         public List<MsgWidgetContentViewModel> Content { get; set; }
     }
 }

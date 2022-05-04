@@ -44,6 +44,7 @@ namespace DIPLOMA.Controllers
                 .Include(m => m.Direction)
                 .Include(m => m.TimeInterval)
                 .Include(m => m.DisplayMode)
+                .Include(r => r.TextStyle)
                 .FirstOrDefaultAsync(m => m.ID == id);
 
             if (stawidget == null)
@@ -107,9 +108,9 @@ namespace DIPLOMA.Controllers
                         {
                             Key = dname,
                             Count = donates.Count(),
-                            Sum = donates.Sum(d => d.Amount),
-                            Min = donates.Min(d => d.Amount),
-                            Max = donates.Max(d => d.Amount),
+                            Sum = donates.Sum(d => d.Amount.GetValueOrDefault()),
+                            Min = donates.Min(d => d.Amount.GetValueOrDefault()),
+                            Max = donates.Max(d => d.Amount.GetValueOrDefault()),
 
                         }).
                         ToList();
@@ -151,7 +152,7 @@ namespace DIPLOMA.Controllers
                         new DonateMsg()
                         {
                             DonatorName = "",
-                            Amount = donateMsgList.Sum(r => r.Amount)
+                            Amount = donateMsgList.Sum(r => r.Amount.GetValueOrDefault())
                         });
                     break;
                 default:
@@ -159,6 +160,10 @@ namespace DIPLOMA.Controllers
             }
 
             DisplayStatisticViewModel viewModel = new DisplayStatisticViewModel();
+            if (stawidget.TextStyle == null)
+            {
+                stawidget.TextStyle = new TextStyle();
+            }
             viewModel.SWidget = stawidget;
             viewModel.DirectionTypeCD = stawidget.Direction.CD;
             viewModel.DisplayTypeCD = stawidget.DisplayMode.CD;
@@ -195,6 +200,7 @@ namespace DIPLOMA.Controllers
                 .Include(s => s.TimeInterval)
                 .Include(s => s.User)
                 .Include(s => s.WidgetType)
+                .Include(r => r.TextStyle)
                 .Where(r => r.UserID == _currentUserId)
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (statisticWidget == null)
@@ -242,6 +248,8 @@ namespace DIPLOMA.Controllers
                 statisticWidget.Url = $"/{nameof(MsgWidgetsController).Replace("Controller", "")}/{nameof(this.Display)}/{statisticWidget.ID}";
                 statisticWidget.DisplayUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" +
                 $"{statisticWidget.Url}";
+
+                //_context.Add(statisticWidget.TextStyle);
                 _context.Add(statisticWidget);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -263,13 +271,20 @@ namespace DIPLOMA.Controllers
             }
 
             var statisticWidget = await _context.StatisticWidget.
-                FindAsync(id);
+                Include(r => r.TextStyle).
+                Include(r => r.User).
+                FirstOrDefaultAsync(r => r.ID == id);
 
             if (statisticWidget == null
                 || statisticWidget.UserID != _currentUserId)
             {
                 return NotFound();
             }
+            if(statisticWidget.TextStyle == null)
+            {
+                statisticWidget.TextStyle = new TextStyle();
+            }
+
             ViewData["DirectionID"] = new SelectList(_context.StatWidgetDirectionType, nameof(TypeModel.ID), nameof(TypeModel.Description), statisticWidget.DirectionID);
             ViewData["DisplayModeID"] = new SelectList(_context.StatWidgetDisplayModeType, nameof(TypeModel.ID), nameof(TypeModel.Description), statisticWidget.DisplayModeID);
             ViewData["TimeIntervalID"] = new SelectList(_context.StatWidgetTimeIntervalType, nameof(TypeModel.ID), nameof(TypeModel.Description), statisticWidget.TimeIntervalID);
@@ -283,7 +298,9 @@ namespace DIPLOMA.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("HeaderText,ElementsCount,ScrollingSpeed,DisplayModeID,WidgetTypeID,DirectionID,TimeIntervalID,ID,UserID,Name,Url,CreatedDate,UpdatedDate")] StatisticWidget statisticWidget)
+        public async Task<IActionResult> Edit(Guid id, 
+            //[Bind("HeaderText,ElementsCount,ScrollingSpeed,DisplayModeID,WidgetTypeID,DirectionID,TimeIntervalID,ID,UserID,Name,Url,CreatedDate,UpdatedDate")]
+        StatisticWidget statisticWidget)
         {
             if (id != statisticWidget.ID)
             {

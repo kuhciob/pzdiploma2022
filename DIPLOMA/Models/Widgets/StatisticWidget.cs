@@ -39,7 +39,8 @@ namespace DIPLOMA.Models
         [Display(Name = "Time interval")]
         public StatWidgetTimeIntervalType TimeInterval { get; set; }
 
-        
+        //public TextStyle TextStyle { get; set; }
+
 
     }
 }

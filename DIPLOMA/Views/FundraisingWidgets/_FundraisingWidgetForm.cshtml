@@ -1,0 +1,147 @@
+﻿@model DIPLOMA.Models.FundraisingWidget
+
+    <div class="row">
+        <div class="col-8">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check form-switch">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="HeaderText" class="control-label"></label>
+                <input asp-for="HeaderText" class="form-control" />
+                <small id="showUserText" class="form-text text-muted">
+                    <div class="mt-2 mb-1">
+                        Allowed :
+                        <u>{percentage}</u>
+                    </div>
+                </small>
+                <span asp-validation-for="HeaderText" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check  form-switch">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="HideInitAndTargetAmounts" /> @Html.DisplayNameFor(model => model.HideInitAndTargetAmounts)
+                </label>
+            </div>
+            @await Html.PartialAsync("~/Views/Shared/_TextStyleForm.cshtml", Model)
+
+            <div class="form-group">
+                <label asp-for="InitialAmt" class="control-label"></label>
+                <input asp-for="InitialAmt" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="InitialAmt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TargetAmt" class="control-label"></label>
+                <input asp-for="TargetAmt" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="TargetAmt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CollectedAmt" class="control-label"></label>
+                <input asp-for="CollectedAmt" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="CollectedAmt" class="text-danger"></span>
+            </div>
+
+            <br />
+
+            <div class="form-group">
+
+                <label asp-for="Height" class="control-label"></label>
+                <div class="range-control">
+                    <input asp-for="Height" class="form-range" type="range" min="0" max="200" data-thumbwidth="20" />
+                    <output name="rangeVal"></output>
+                </div>
+
+                <span asp-validation-for="Height" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Radius" class="control-label"></label>
+                <div class="range-control">
+                    <input asp-for="Radius" class="form-range range-control" type="range" min="0" max="60" />
+                    <output name="rangeVal"></output>
+                </div>
+
+
+                <span asp-validation-for="Radius" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BorderSize" class="control-label"></label>
+                <div class="range-control">
+                    <input asp-for="BorderSize" class="form-range" type="range" min="0" max="10" />
+
+                    <output name="rangeVal"></output>
+                </div>
+                <span asp-validation-for="BorderSize" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-3">
+                        <label asp-for="BorderColorHex" class="control-label"></label>
+                    </div>
+                    <div class="col-9">
+                        <input asp-for="BorderColorHex" type="color" class="form-control-color" />
+                    </div>
+                </div>
+                <span asp-validation-for="BorderColorHex" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-3">
+                        <label asp-for="IndicatorColorHex" class="control-label"></label>
+
+                    </div>
+                    <div class="col-9">
+                        <input asp-for="IndicatorColorHex" type="color" class="form-control-color" />
+                    </div>
+                </div>
+                <span asp-validation-for="IndicatorColorHex" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-3">
+                        <label asp-for="IndicatorBackgroundColorHex" class="control-label"></label>
+
+
+                    </div>
+                    <div class="col-9">
+                        <input asp-for="IndicatorBackgroundColorHex" type="color" class="form-control-color" />
+
+                    </div>
+                </div>
+                <span asp-validation-for="IndicatorBackgroundColorHex" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-3">
+                        <label asp-for="DigitsColorHex" class="control-label"></label>
+
+                    </div>
+                    <div class="col-9">
+                        <input asp-for="DigitsColorHex" type="color" class="form-control-color" />
+
+                    </div>
+                </div>
+                <span asp-validation-for="DigitsColorHex" class="text-danger"></span>
+            </div>
+
+
+
+            <input type="hidden" asp-for="ID" />
+            <input type="hidden" asp-for="UserID" />
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="UpdatedDate" />
+            <div class="form-group">
+
+                <span asp-validation-for="UserID" class="text-danger"></span>
+            </div>
+        </div>
+    </div>

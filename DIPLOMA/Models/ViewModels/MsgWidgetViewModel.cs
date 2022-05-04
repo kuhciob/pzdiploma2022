@@ -12,8 +12,14 @@ namespace DIPLOMA.Models.ViewModels
     {
         
     }
-    public class MsgWidgetViewModel 
+    public class MsgWidgetViewModel : Widget
     {
+        [NotMapped]
+        public Guid ID { get; set; }
+        [NotMapped]
+        public string UserID { get; set; }
+        [NotMapped]
+        public string Name { get; set; }
         public MsgWidget MWidget { get; set; }
         public List<MsgWidgetContent> VMMsgWidgetContent { get; set; }
         //[Display(Name = "Anim")]

@@ -54,13 +54,19 @@ namespace DIPLOMA.Controllers
                 .ThenInclude(m => m.Animation)
                 .Include(m => m.MsgWidgetContent)
                 .ThenInclude(m => m.Sound)
+               .Include(m => m.TextStyle)
 
                 .FirstOrDefaultAsync(m => m.ID == id);
 
             DisplayMsgViewModel displayMsgViewModel = new DisplayMsgViewModel();
             displayMsgViewModel.MWidget = msgWidget;
             displayMsgViewModel.Content = new List<MsgWidgetContentViewModel>();
-
+            if (msgWidget.TextStyle == null)
+            {
+                msgWidget.TextStyle = new TextStyle();
+            }
+            displayMsgViewModel.TextStyle = msgWidget.TextStyle;
+            
             var contentUrls = ContanteToUrls(msgWidget.MsgWidgetContent.ToList());
             foreach (var item in contentUrls)
             {
@@ -107,6 +113,8 @@ namespace DIPLOMA.Controllers
                 .ThenInclude(m => m.Sound)
                 .Include(m => m.MsgWidgetContent)
                 .ThenInclude(m => m.Animation)
+               .Include(m => m.TextStyle)
+
                 .Where(r => r.UserID == _currentUserId)
                 .FirstOrDefaultAsync(m => m.ID == id);
 
@@ -148,6 +156,9 @@ namespace DIPLOMA.Controllers
 
             var vm = new MsgWidgetViewModel();
             vm.MWidget = new MsgWidget();
+            //vm.MWidget.TextStyle = new TextStyle();
+            vm.TextStyle = new TextStyle();
+
             vm.MWidget.UserID = user.Id;
             vm.MWidget.MaxSymbols = 100;
             vm.MWidget.DisplayTimeSec = 5;
@@ -180,6 +191,8 @@ namespace DIPLOMA.Controllers
                     msgWidget.Url = $"/{nameof(MsgWidgetsController).Replace("Controller", "")}/{nameof(this.Display)}/{msgWidget.ID}";
                     msgWidget.DisplayUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" +
                     $"{msgWidget.Url}";
+                    msgWidget.TextStyle = msgWidgetVM.TextStyle;
+                    //_context.Add(msgWidget.TextStyle);
                     _context.Add(msgWidget);
                     foreach (var content in msgWidgetContent)
                     {
@@ -236,6 +249,7 @@ namespace DIPLOMA.Controllers
                .ThenInclude(m => m.Animation)
                .Include(m => m.MsgWidgetContent)
                .ThenInclude(m => m.Sound)
+               .Include(m => m.TextStyle)
                .Where(r => r.UserID == _currentUserId)
                .FirstOrDefaultAsync(m => m.ID == id);
             msgWidget.DisplayUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}" +
@@ -245,9 +259,14 @@ namespace DIPLOMA.Controllers
             {
                 return NotFound();
             }
+            if (msgWidget.TextStyle == null)
+            {
+                msgWidget.TextStyle = new TextStyle();
+            }
 
             MsgWidgetViewModel viewModel = new MsgWidgetViewModel();
             viewModel.MWidget = msgWidget;
+            viewModel.TextStyle = msgWidget.TextStyle;
             //viewModel.VMMsgWidgetContent = new List<MsgWidgetContent>() { new MsgWidgetContent() };
             viewModel.VMMsgWidgetContent = msgWidget.MsgWidgetContent.ToList();
 
@@ -293,6 +312,7 @@ namespace DIPLOMA.Controllers
         public async Task<IActionResult> Edit(Guid id, MsgWidgetViewModel msgWidgetViewModel)
         {
             MsgWidget msgWidget = msgWidgetViewModel.MWidget;
+            msgWidget.TextStyle = msgWidgetViewModel.TextStyle;
             List<MsgWidgetContent> contentList = msgWidgetViewModel.VMMsgWidgetContent;
 
             if (id != msgWidget.ID)
@@ -374,7 +394,7 @@ namespace DIPLOMA.Controllers
 
                     }
 
-                    _context.Update(msgWidgetViewModel.MWidget);
+                    _context.Update(msgWidget);
                     await _context.SaveChangesAsync();
 
                     foreach (var item in deleatedFileID)
@@ -398,7 +418,7 @@ namespace DIPLOMA.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", msgWidgetViewModel.MWidget.UserID);
-            return View(msgWidgetViewModel.MWidget);
+            return View(msgWidgetViewModel);
         }
 
         // POST: MsgWidgets/Edit/5
@@ -406,7 +426,9 @@ namespace DIPLOMA.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditBASE(Guid id, [Bind("MinAmt,MaxAmt,HeaderText,MaxSymbols,DisplayTimeSec,RandomContent,ReadHeader,ReadMessage,ID,UserID,Name,Url")] MsgWidget msgWidget)
+        public async Task<IActionResult> EditBASE(Guid id, 
+            //[Bind("MinAmt,MaxAmt,HeaderText,MaxSymbols,DisplayTimeSec,RandomContent,ReadHeader,ReadMessage,ID,UserID,Name,Url")] 
+        MsgWidget msgWidget)
         {
             if (id != msgWidget.ID)
             {

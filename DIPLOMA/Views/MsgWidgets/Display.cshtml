@@ -14,10 +14,10 @@
     setTimeout(function () { location.reload() }, 900000);
 </script>
 
-<button type="button" onclick="testbutton()" hidden> TEST</button>
+<button type="button" onclick="testbutton()" > TEST</button>
 <button id="playButton" type="button" onclick="displayContent()" hidden> PLAY</button>
 
-<div>
+<div style="@Model.TextStyle.TextStyleCss">
     <dl class="row" id="donate" style="display:none; text-align:center; width:1000px; ">
         <dd class="col-sm-10">
             <h2 id="DonatorName"></h2>
@@ -179,6 +179,7 @@
         .build();
     // Get message from hub
     hubConnection.on('ReceiveMessage', function (donate) {
+        console.log("Mesg Received")
         displayDonate(donate);
         });
     hubConnection.start();
