@@ -13,11 +13,15 @@ namespace DIPLOMA.Views.Panel
         public static string Notification => "Notification";
         public static string Fundraising => "Fundraising";
         public static string Statistic => "Statistic";
+        public static string Profile => "ProfilePage";
+
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
         public static string MessagesNavClass(ViewContext viewContext) => PageNavClass(viewContext, Messages);
         public static string NotificationNavClass(ViewContext viewContext) => PageNavClass(viewContext, Notification);
         public static string FundraisingNavClass(ViewContext viewContext) => PageNavClass(viewContext, Fundraising);
         public static string StatisticNavClass(ViewContext viewContext) => PageNavClass(viewContext, Statistic);
+        public static string ProfileNavClass(ViewContext viewContext) => PageNavClass(viewContext, Profile);
+
 
         private static string PageNavClass(ViewContext viewContext, string page)
         {

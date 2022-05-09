@@ -1,0 +1,127 @@
+﻿@model DIPLOMA.Models.UserProfile
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_PanelLayout.cshtml";
+    ViewData["ActivePage"] = DIPLOMA.Views.Panel.PanelNavPages.Profile;
+
+}
+
+<div class="row">
+    <div class="col-8">
+        <form asp-action="UserProfile" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <h4><a href="@Model.ProfileUrl">@Model.ProfileUrl</a></h4>
+                <small>Link to your donat page. Your subscribers can send messages and donate.</small>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="Bio" class="control-label"></label>
+                <textarea asp-for="Bio" class="form-control" rows="6" ></textarea>
+                <span asp-validation-for="Bio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="BackgroundImgFormFile" class="control-label"></label>
+
+                        <input asp-for="BackgroundImgFormFile" class="form-control-file"
+                               accept="image/*" onchange="loadImg(event,'@nameof(Model.BackgroundImg)')" />
+                        <span asp-validation-for="BackgroundImgFormFile" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <img id="output-@nameof(Model.BackgroundImg)" width="100" class="control-label" src="@Model.BackgroundImgSrc" />
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="ProfilePicFormFile" class="control-label"></label>
+
+                        <input asp-for="ProfilePicFormFile" class="form-control-file"
+                               accept="image/*" onchange="loadImg(event, '@nameof(Model.ProfilePic)')" />
+                        <span asp-validation-for="ProfilePicFormFile" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <img id="output-@nameof(Model.ProfilePic)" width="100" class="control-label" src="@Model.ProfilePicImgSrc" />
+
+                    </div>
+                </div>
+            </div>
+            <script>
+                var loadImg = function (event, i) {
+                    var image = document.getElementById('output-' + i);
+                    image.src = URL.createObjectURL(event.target.files[0]);
+                };
+                var loadSound = function (event, i) {
+                    var audio = document.getElementById('audio-' + i);
+
+                    document.getElementById('audiosrc-' + i).remove();
+                    let newsource = document.createElement('source');
+                    newsource.id = 'audiosrc-' + i.toString();
+                    newsource.src = URL.createObjectURL(event.target.files[0]);
+                    console.log(newsource.src);
+                    audio.appendChild(newsource);
+                };
+            </script>
+
+            <input type="hidden" asp-for="ID" />
+            <div class="form-group">
+                <label asp-for="Instagram" class="control-label"></label>
+                <input asp-for="Instagram" class="form-control" />
+                <span asp-validation-for="Instagram" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Discord" class="control-label"></label>
+                <input asp-for="Discord" class="form-control" />
+                <span asp-validation-for="Discord" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Twitter" class="control-label"></label>
+                <input asp-for="Twitter" class="form-control" />
+                <span asp-validation-for="Twitter" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Facebook" class="control-label"></label>
+                <input asp-for="Facebook" class="form-control" />
+                <span asp-validation-for="Facebook" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Youtube" class="control-label"></label>
+                <input asp-for="Youtube" class="form-control" />
+                <span asp-validation-for="Youtube" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Twitch" class="control-label"></label>
+                <input asp-for="Twitch" class="form-control" />
+                <span asp-validation-for="Twitch" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Telegram" class="control-label"></label>
+                <input asp-for="Telegram" class="form-control" />
+                <span asp-validation-for="Telegram" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <input asp-for="BackgroundImgId" class="form-control" asp-items="ViewBag.BackgroundImgId" hidden />
+
+                <input asp-for="ProfilePicId" class="form-control" asp-items="ViewBag.ProfilePicId" hidden />
+
+                <input asp-for="UserID" class="form-control" hidden />
+                <span asp-validation-for="ProfilePicId" class="text-danger"></span>
+                <span asp-validation-for="BackgroundImgId" class="text-danger"></span>
+
+                <span asp-validation-for="UserID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+

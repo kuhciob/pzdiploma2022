@@ -492,47 +492,7 @@ namespace DIPLOMA.Controllers
         }
         #endregion
         #region Helpers
-        private IFormFile GetFormFile(UploadFile uploadFile)
-        {
-            if (uploadFile != null
-                && uploadFile.Data != null)
-            {
-                using (var stream = new MemoryStream(uploadFile.Data))
-                {
-                    IFormFile file = new FormFile(stream, 0, uploadFile.Data.Length,
-                        uploadFile.Name, uploadFile.Name);
-                    return file;
-                }
-            }
-            else
-            {
-                return null;
-            }
-        }
-        private bool MsgWidgetExists(Guid id)
-        {
-            return _context.MsgWidget.Any(e => e.ID == id);
-        }
-        private async Task<UploadFile> GetUploadFileAsync(IFormFile formFile)
-        {
-            using (var memoryStream = new MemoryStream())
-            {
-                await formFile.CopyToAsync(memoryStream);
-                UploadFile uploadFile = new UploadFile();
-                uploadFile.ID = Guid.NewGuid();
-                uploadFile.Name = formFile.FileName;
-                if (uploadFile.Name.LastIndexOf(".") > 0)
-                {
-                    uploadFile.Extension = uploadFile.Name.
-                        Trim().
-                        Substring(uploadFile.Name.LastIndexOf("."));
-                }
-                uploadFile.Data = memoryStream.ToArray();
-
-                return uploadFile;
-            }
-        }
-        private string GetUploadedFileName(IFormFile file)
+        protected string GetUploadedFileName(IFormFile file)
         {
             string uniqueFileName = null;
 
@@ -548,55 +508,13 @@ namespace DIPLOMA.Controllers
             }
             return uniqueFileName;
         }
-        private IEnumerable<(string, string)> ContanteToUrls(IEnumerable<MsgWidgetContent> contentList)
+        
+        private bool MsgWidgetExists(Guid id)
         {
-            foreach (var item in contentList)
-            {
-                yield return ContanteToUrls(item);
-            }
+            return _context.MsgWidget.Any(e => e.ID == id);
         }
-        private (string, string) ContanteToUrls(MsgWidgetContent content)
-        {
-            string animScr = "";
-            string soundScr = "";
+        
 
-            if (content.Animation != null)
-            {
-                if (content.Animation.Extension.Contains("gif"))
-                {
-                    animScr = String.Format("data:image/gif;base64,{0}",
-                     Convert.ToBase64String(content.Animation.Data));
-                }
-                else
-                {
-                    animScr = String.Format("data:image/{0};base64,{1}",
-                     content.Animation.Extension.Replace(".", ""), Convert.ToBase64String(content.Animation.Data));
-                }
-
-            }
-            if (content.Sound != null)
-            {
-                if (content.Sound.Extension.Contains("wav"))
-                {
-                    soundScr = String.Format("data:audio/wav;base64,{0}",
-                        Convert.ToBase64String(content.Sound.Data));
-                }
-                else
-                if (content.Sound.Extension.Contains("mp3"))
-                {
-                    soundScr = String.Format("data:audio/mp3;base64,{0}",
-                        Convert.ToBase64String(content.Sound.Data));
-                }
-                else
-                {
-                    soundScr = String.Format("data:audio/{0};base64,{1}",
-                        content.Sound.Extension.Replace(".", ""), Convert.ToBase64String(content.Sound.Data));
-                }
-
-            }
-
-            return (animScr, soundScr);
-        }
         #endregion
 
     }

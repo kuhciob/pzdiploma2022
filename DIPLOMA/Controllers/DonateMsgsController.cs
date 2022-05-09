@@ -45,6 +45,54 @@ namespace DIPLOMA.Controllers
 
         // GET: Donate/lvasuk
         [AllowAnonymous]
+        [HttpGet("TestDonate/{username}")]
+        public async Task<IActionResult> TestDonate(string username)
+        {
+            return await Create(username);
+        }
+        [HttpPost("TestDonate/{username}")]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> TestDonate(DonateMsg donateMsg)
+        {
+            if (ModelState.IsValid)
+            {
+                var session = CreateCheckoutSession(donateMsg);
+
+                donateMsg.CheckoutSessionID = session.Id;
+                donateMsg.CreatedDate = DateTime.Now;
+                _context.Add(donateMsg);
+                await _context.SaveChangesAsync();               
+                await _donateHub.Clients.Group(donateMsg.UserID).SendAsync("ReceiveMessage", donateMsg);
+                ////await _donateHub.Clients.All.SendAsync("ReceiveMessage", donateMsg);
+                List<FundraisingWidget> fundrasingWidgets = await _context.FundraisingWidget.
+                    Where(r => r.UserID == donateMsg.UserID
+                    && r.Active == true).
+                    ToListAsync();
+
+                try
+                {
+                    foreach (var item in fundrasingWidgets)
+                    {
+                        item.CollectedAmt = item.CollectedAmt.GetValueOrDefault() + donateMsg.Amount;
+                        _context.Update(item);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+
+                return RedirectToAction(nameof(Create));
+            }
+            ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", donateMsg.UserID);
+
+
+            return View(donateMsg);
+        }
+        [AllowAnonymous]
         [HttpGet("Donate/{username}")]
         //[HttpGet()]
 
@@ -56,15 +104,34 @@ namespace DIPLOMA.Controllers
             }
 
             var user = await _context.Users
+                .Include(r => r.UserProfile)
+                .ThenInclude(u => u.BackgroundImg)
+                .Include(r => r.UserProfile)
+                .ThenInclude(u => u.ProfilePic)
                 .FirstOrDefaultAsync(m => m.NickName == username);
 
             if (user == null)
             {
                 return NotFound();
             }
+
+            if(user.UserProfile != null)
+            {
+                user.UserProfile.BackgroundImgSrc = base.ContanteToUrls(user.UserProfile.BackgroundImg);
+                user.UserProfile.ProfilePicImgSrc = base.ContanteToUrls(user.UserProfile.ProfilePic);
+            }
+            else
+            {
+                user.UserProfile = new UserProfile();
+            }
+            
+
             ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", user.Id);
 
-            return View();
+            var donMsg = new DonateMsg();
+            donMsg.UserID = user.Id;
+            donMsg.User = user;
+            return View(donMsg);
         }
 
         [HttpPost("create-checkout-session")]
@@ -197,7 +264,7 @@ namespace DIPLOMA.Controllers
                 if(donateMsg.Read == false)
                 {
                     await _donateHub.Clients.Group(donateMsg.UserID).SendAsync("ReceiveMessage", donateMsg);
-                    //donateMsg.Read = true;
+                    donateMsg.Read = true;
                 }
                 _context.Update(donateMsg);
                 await _context.SaveChangesAsync();

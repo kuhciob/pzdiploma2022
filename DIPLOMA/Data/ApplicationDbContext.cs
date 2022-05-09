@@ -33,6 +33,8 @@ namespace DIPLOMA.Data
         public DbSet<DIPLOMA.Models.StatisticWidget> StatisticWidget { get; set; }
         public DbSet<DIPLOMA.Models.FundraisingWidget> FundraisingWidget { get; set; }
         public DbSet<DIPLOMA.Models.TextStyle> TextStyle { get; set; }
+        public DbSet<DIPLOMA.Models.UserProfile> UserProfile { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -40,6 +42,27 @@ namespace DIPLOMA.Data
             modelBuilder.Entity<ApplicationUser>(entity => 
             {
                 entity.HasIndex(e => e.NickName).IsUnique();
+
+                entity.HasOne<UserProfile>(s => s.UserProfile)
+                    .WithOne(r => r.User)
+                    .HasForeignKey<UserProfile>(r => r.UserID);
+            });
+
+            modelBuilder.Entity<UserProfile>(entity =>
+            {
+                entity.HasOne<ApplicationUser>(s => s.User)
+                    .WithOne(r => r.UserProfile)
+                    .HasForeignKey<UserProfile>(r => r.UserID);
+
+                entity.HasOne(d => d.BackgroundImg)
+                    .WithMany(p => p.UserProfileBackGrounds)
+                    .HasForeignKey(d => d.BackgroundImgId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+
+                entity.HasOne(d => d.ProfilePic)
+                   .WithMany(p => p.UserProfileProfPics)
+                   .HasForeignKey(d => d.ProfilePicId)
+                   .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
 
@@ -416,6 +439,8 @@ namespace DIPLOMA.Data
 
             });
             
+
+
             modelBuilder.Entity<TextStyle>(entity =>
             {
                 //entity.Property(e => e.ID).

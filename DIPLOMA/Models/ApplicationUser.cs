@@ -15,7 +15,8 @@ namespace DIPLOMA.Models
         [StringLength(20)]
         //[Unique(ErrorMessage = "This already exist !!")]
         public string NickName { get; set; }
-
+        
+        public UserProfile UserProfile { get; set; }
         public virtual ICollection<DonateMsg> DonateMsgs { get; set; }
         public virtual ICollection<MsgWidget> MsgWidgets { get; set; }
         public virtual ICollection<StatisticWidget> StatisticWidgets { get; set; }

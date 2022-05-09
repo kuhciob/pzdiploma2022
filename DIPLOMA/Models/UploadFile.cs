@@ -26,8 +26,12 @@ namespace DIPLOMA.Models
         
         public virtual ICollection<MsgWidgetContent> MsgWidgetContentSound { get; set; }
         public virtual ICollection<MsgWidgetContent> MsgWidgetContentAnimation{ get; set; }
+        public virtual ICollection<UserProfile> UserProfileBackGrounds { get; set; }
+        public virtual ICollection<UserProfile> UserProfileProfPics { get; set; }
 
-       
+
+
+
 
     }
 }

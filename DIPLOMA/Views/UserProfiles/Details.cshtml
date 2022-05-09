@@ -1,0 +1,146 @@
+﻿@model DIPLOMA.Models.UserProfile
+
+@{
+    Layout = null;
+    int iconWidth = 34;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <meta name="viewport" content="width=device-width" />
+    <title>@Model.User.NickName</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <base href="~/" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body style="        background-image: url( @Model.BackgroundImgSrc );
+        background-size: cover;
+        height: 100%;
+        min-height: 100%;
+        margin-bottom: -50px;
+ ">
+    <div class="container" style="max-width:;">
+        <main role="main" class="m-5 p-3 " style="height: 90%; min-height: 80%;  " >
+            <div class="row m-5 mr-5 p-3" style="        margin-bottom: 0px!important;
+        margin-top: 0px!important">
+                <div class="col d-flex align-items-center">
+                    <img src="@Model.ProfilePicImgSrc" width="150" style="border-radius:5px" />
+                    <h2 style="padding-left:10px">@Model.User.NickName</h2>
+
+                </div>
+                <div class="col">
+                </div>
+                <div class="col">
+                    @if (string.IsNullOrEmpty(Model.Youtube) == false)
+                    {
+                        <a href="@Model.Youtube"><img src="~/imgs/youtube_icin_square.png" width="@iconWidth" style="padding:2px"/></a>
+                    }
+                    @if (string.IsNullOrEmpty(Model.Twitch) == false)
+                    {
+                        <a href="@Model.Twitch"><img src="~/imgs/twitch_tile_logo_icon.png" width="@iconWidth" style="padding:2px"/></a>
+                    }
+                    @if (string.IsNullOrEmpty(Model.Facebook) == false)
+                    {
+                        <a href="@Model.Facebook"><img src="~/imgs/facebook_icon_2.png" width="@iconWidth" style="padding:2px"/></a>
+                    }
+                    @if (string.IsNullOrEmpty(Model.Instagram) == false)
+                    {
+                        <a href="@Model.Instagram"><img src="~/imgs/inst_icon_square.png" width="@iconWidth" style="padding:2px"/></a>
+                    }
+                    @if (string.IsNullOrEmpty(Model.Twitter) == false)
+                    {
+                        <a href="@Model.Twitter"> <img src="~/imgs/twitter_icon.png" width="@iconWidth" style="padding:2px"/></a>
+                    }
+                    @if (string.IsNullOrEmpty(Model.Telegram) == false)
+                    {
+                        <a href="@Model.Telegram"><img src="~/imgs/telegram_icon_square.png" width="@iconWidth" style="padding:2px"/></a>
+                    }
+                    @if (string.IsNullOrEmpty(Model.Youtube) == false)
+                    {
+
+                        <a href="@Model.Discord"><img src="~/imgs/discord_icon.png" width="@iconWidth" style="padding:2px"/></a>
+                    }
+
+
+                </div>
+            </div>
+            <div 
+                 class="m-5 p-3"
+                 style="        background-color: cornflowerblue;
+        height: 100%;
+        border-radius: 10px;
+        margin-top: 10px !important
+">
+
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Instagram)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Instagram)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Discord)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Discord)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Twitter)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Twitter)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Facebook)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Facebook)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Youtube)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Youtube)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Twitch)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Twitch)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Telegram)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Telegram)
+                    </dd>
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.Bio)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.Bio)
+                    </dd>
+
+
+                </dl>
+            </div>
+        </main>
+    </div>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="_framework/blazor.server.js"></script>
+
+</body>
+</html>
+

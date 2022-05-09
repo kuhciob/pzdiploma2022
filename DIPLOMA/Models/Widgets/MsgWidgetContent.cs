@@ -22,7 +22,6 @@ namespace DIPLOMA.Models
         [Display(Name = "Amination")]
         public UploadFile Animation { get; set; }
         [Display(Name = "Sound")]
-
         public UploadFile Sound { get; set; }
 
         [Display(Name = "Animation")]
