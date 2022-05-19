@@ -1,57 +1,107 @@
-﻿@model IEnumerable<DIPLOMA.Models.DonateMsg>
-
+﻿@model DashboardViewModel
+@using System.Linq;
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_PanelLayout.cshtml";
     ViewData["ActivePage"] = DIPLOMA.Views.Panel.PanelNavPages.Index;
 }
 
-<table class="table">
-    <thead>
+<script src="https://cdn.plot.ly/plotly-2.12.1.min.js"></script>
+<script>
+    function buildAalltimeChart(divId, xData, yData ) {
+
+        console.log(yData);
+
+
+        let alltimesdata = [{
+            x: xData,
+            y: yData,
+            type: "bar"
+        }];
+
+        let alltimeslayout = {
+            title: "Amount per day"
+        };
+
+
+        Plotly.newPlot(document.getElementById(divId), alltimesdata, alltimeslayout);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        let alldates = @Html.Raw(Json.Serialize(@Model.AllDonatesChart.Dates));
+        let allamtss = @Html.Raw(Json.Serialize(@Model.AllDonatesChart.Amounts));
+        buildAalltimeChart('AllTimeChart', alldates, allamtss);
+    });
+
+</script>
+
+<br />
+
+<h3>Statistics for all time</h3>
+<div class="row">
+    <h4>The total donates amount = <b>@Model.AllTimeAmt</b> </h4>
+</div>
+<div id="AllTimeChart" style="width:auto;height:auto"></div>
+
+
+<br />
+<div class="row">
+    <table class="table">
+        <caption>Top donators</caption>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Amount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DonatorName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Message)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th></th>
+            <th>Username</th>
+            <th>Amount</th>
+
         </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.TopDonators)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Amount)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DonatorName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Message)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreatedDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.User.Id)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                </td>
+                <th>@item.DonatorName</th>
+                <th>@item.Amount</th>
             </tr>
         }
-    </tbody>
-</table>
+    </table>
+
+</div>
+<br />
+<h3>Statistics for the time period</h3>
+
+<div class="row">
+    <form asp-action="Index" method="get" class="btn-group mr-2">
+
+        <div class="input-group m-1">
+            <label for="StartDate" class="col-form-label p-1">Satart time</label>
+            <input type="date" class="form-control" placeholder="Start date"
+                   aria-describedby="btnGroupAddon" name="StartDate">
+        </div>
+        <div class="input-group m-1">
+            <label for="EndDate" class="col-form-label p-1">End time</label>
+            <input type="date" class="form-control" placeholder="End date" name="EndDate">
+        </div>
+
+        <input type="submit" value="Apply" class="btn btn-outline-primary" />
+    </form>
+</div>
+
+
+<div class="row">
+    <h4>The total donates amount = <b>@Model.InBordersAmt</b> </h4>
+
+</div>
+
+<div class="row">
+    <table >
+        <tr>
+            <th>Username</th>
+            <th>Amount</th>
+
+        </tr>
+        @foreach (var item in Model.InBordersTopDonators)
+        {
+            <tr>
+                <th>@item.DonatorName</th>
+                <th>@item.Amount</th>
+            </tr>
+        }
+    </table>
+</div>

@@ -315,6 +315,17 @@ namespace DIPLOMA.Controllers
             msgWidget.TextStyle = msgWidgetViewModel.TextStyle;
             List<MsgWidgetContent> contentList = msgWidgetViewModel.VMMsgWidgetContent;
 
+            var existedContentToDeleate = await _context.MsgWidgetContent.
+                Where(r => r.MsgWidgetID == id).
+                Include(r => r.Sound).
+                Include(r => r.Animation).
+                ToListAsync();
+
+            foreach (var item in contentList)
+            {
+                existedContentToDeleate.RemoveAll(r => r.ID == item.ID);
+            }
+
             if (id != msgWidget.ID)
             {
                 return NotFound();
@@ -402,6 +413,11 @@ namespace DIPLOMA.Controllers
                         _context.Remove(_context.UploadFile.
                                         FirstOrDefault(f => f.ID == item));
                     }
+                    foreach (var item in existedContentToDeleate)
+                    {
+                        _context.Remove(item);
+                    }
+                    
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

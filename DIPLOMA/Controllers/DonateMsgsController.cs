@@ -17,6 +17,8 @@ using Stripe;
 using Stripe.BillingPortal;
 using Stripe.Checkout;
 using Newtonsoft.Json;
+using System.Net;
+using System.Globalization;
 
 namespace DIPLOMA.Controllers
 {
@@ -188,6 +190,7 @@ namespace DIPLOMA.Controllers
             await _donateHub.Clients.Group(donateMsg.UserID).SendAsync("ReceiveMessage", donateMsg);
             return Ok();
         }
+        
         // POST: DonateMsgs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -202,6 +205,9 @@ namespace DIPLOMA.Controllers
 
                 donateMsg.CheckoutSessionID = session.Id;
                 donateMsg.CreatedDate = DateTime.Now;
+                var clientIpAddress = Request.HttpContext.Connection.RemoteIpAddress;
+  
+
                 _context.Add(donateMsg);
                 await _context.SaveChangesAsync();
 
@@ -427,7 +433,49 @@ namespace DIPLOMA.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        public class IpInfo
+        {
+            [JsonProperty("ip")]
+            public string Ip { get; set; }
 
+            [JsonProperty("hostname")]
+            public string Hostname { get; set; }
+
+            [JsonProperty("city")]
+            public string City { get; set; }
+
+            [JsonProperty("region")]
+            public string Region { get; set; }
+
+            [JsonProperty("country")]
+            public string Country { get; set; }
+
+            [JsonProperty("loc")]
+            public string Loc { get; set; }
+
+            [JsonProperty("org")]
+            public string Org { get; set; }
+
+            [JsonProperty("postal")]
+            public string Postal { get; set; }
+        }
+        public static string GetUserCountryByIp(string ip)
+        {
+            IpInfo ipInfo = new IpInfo();
+            try
+            {
+                string info = new WebClient().DownloadString("http://ipinfo.io/" + ip);
+                ipInfo = JsonConvert.DeserializeObject<IpInfo>(info);
+                RegionInfo myRI1 = new RegionInfo(ipInfo.Country);
+                ipInfo.Country = myRI1.EnglishName;
+            }
+            catch (Exception)
+            {
+                ipInfo.Country = null;
+            }
+
+            return ipInfo.Country;
+        }
         private bool DonateMsgExists(int? id)
         {
             return _context.DonateMsg.Any(e => e.ID == id);

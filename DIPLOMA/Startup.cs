@@ -43,8 +43,6 @@ namespace DIPLOMA
                 options.SignIn.RequireConfirmedAccount = true;
             }).
             AddEntityFrameworkStores<ApplicationDbContext>();
-            //AddRoles<IdentityRole>().
-            //AddDefaultTokenProviders(); 
 
             services.AddControllersWithViews().AddControllersAsServices();
             services.AddRazorPages();
@@ -55,7 +53,6 @@ namespace DIPLOMA
             services.AddScoped<IRefreshModelService, RefreshModelService>();
             services.AddScoped<DonateHub>();
             services.AddHttpContextAccessor();
-            //services.AddMvc().AddNewtonsoftJson();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,10 +84,7 @@ namespace DIPLOMA
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
                 endpoints.MapBlazorHub();
-                //endpoints.MapHub<DonateHub>("/donates/{userID}");
                 endpoints.MapHub<DonateHub>("/donates");
-
-
             });
 
             var cultureInfo = new CultureInfo("en-US");

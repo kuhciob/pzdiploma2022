@@ -35,6 +35,10 @@
     <Compile Remove="Data\Migrations\20220502074433_AddTextStyle.Designer.cs" />
     <Compile Remove="Data\Migrations\20220502075202_AddTextStyle.cs" />
     <Compile Remove="Data\Migrations\20220502075202_AddTextStyle.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220515100141_ForeignKeysToUploadFiles.cs" />
+    <Compile Remove="Data\Migrations\20220515100141_ForeignKeysToUploadFiles.Designer.cs" />
+    <Compile Remove="Data\Migrations\20220515101146_ForeignKeysToUploadFiles.cs" />
+    <Compile Remove="Data\Migrations\20220515101146_ForeignKeysToUploadFiles.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -77,21 +77,18 @@ namespace DIPLOMA.Controllers
                     IFormFile backFormFile = userProfile.BackgroundImgFormFile;
                     IFormFile profPicFornmFile = userProfile.ProfilePicFormFile;
 
-                    if(backFormFile != null && profPicFornmFile != null)
+                    if ((backFormFile?.Length + profPicFornmFile?.Length) < 2097152 * 20)
                     {
-                        if ((backFormFile.Length + profPicFornmFile.Length) < 2097152 * 20)
-                        {
-                            UploadFile backUploadFile = await GetUploadFileAsync(backFormFile);
-                            UploadFile profPicUploadFile = await GetUploadFileAsync(profPicFornmFile);
+                        UploadFile backUploadFile = await GetUploadFileAsync(backFormFile);
+                        UploadFile profPicUploadFile = await GetUploadFileAsync(profPicFornmFile);
 
-                            userProfile.BackgroundImgId = backUploadFile.ID;
-                            userProfile.ProfilePicId = profPicUploadFile.ID;
+                        userProfile.BackgroundImgId = backUploadFile.ID;
+                        userProfile.ProfilePicId = profPicUploadFile.ID;
 
-                            _context.Add(backUploadFile);
-                            _context.Add(profPicUploadFile);
-                        }
+                        _context.Add(backUploadFile);
+                        _context.Add(profPicUploadFile);
                     }
-                    
+
 
                     _context.Add(userProfile);
                     await _context.SaveChangesAsync();
@@ -101,6 +98,8 @@ namespace DIPLOMA.Controllers
                 {
                     try
                     {
+                        List<Guid?> deleatedFileID = new List<Guid?>();
+
                         IFormFile backFormFile = userProfile.BackgroundImgFormFile;
                         IFormFile profPicFornmFile = userProfile.ProfilePicFormFile;
 
@@ -111,16 +110,17 @@ namespace DIPLOMA.Controllers
                                 if (backFormFile != null)
                                 {
                                     Guid? oldId = userProfile.BackgroundImgId;
+
                                     if (oldId != null)
                                     {
-                                        _context.Remove(_context.UploadFile.
-                                            FirstOrDefault(f => f.ID == oldId));
+                                        deleatedFileID.Add(oldId);
                                     }
 
                                     UploadFile animUploadFile = await GetUploadFileAsync(backFormFile);
                                     userProfile.BackgroundImgId = animUploadFile.ID;
-
                                     _context.Add(animUploadFile);
+
+                                                                  
                                 }
 
                             }
@@ -131,8 +131,7 @@ namespace DIPLOMA.Controllers
                                     var oldId = userProfile.ProfilePicId;
                                     if (oldId != null)
                                     {
-                                        _context.Remove(_context.UploadFile.
-                                            FirstOrDefault(f => f.ID == oldId));
+                                        deleatedFileID.Add(oldId);
                                     }
 
                                     UploadFile soundUploadFile = await GetUploadFileAsync(profPicFornmFile);
@@ -152,6 +151,12 @@ namespace DIPLOMA.Controllers
 
                         _context.Update(userProfile);
                         await _context.SaveChangesAsync();
+
+                        foreach (var item in deleatedFileID)
+                        {
+                            _context.Remove(_context.UploadFile.
+                                            FirstOrDefault(f => f.ID == item));
+                        }
                     }
                     catch (DbUpdateConcurrencyException)
                     {

@@ -57,11 +57,13 @@ namespace DIPLOMA.Data
                 entity.HasOne(d => d.BackgroundImg)
                     .WithMany(p => p.UserProfileBackGrounds)
                     .HasForeignKey(d => d.BackgroundImgId)
+                    .IsRequired(false)
                     .OnDelete(DeleteBehavior.ClientSetNull);
 
                 entity.HasOne(d => d.ProfilePic)
                    .WithMany(p => p.UserProfileProfPics)
                    .HasForeignKey(d => d.ProfilePicId)
+                   .IsRequired(false)
                    .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
@@ -303,12 +305,12 @@ namespace DIPLOMA.Data
                 entity.HasOne(d => d.Sound)
                     .WithMany(p => p.MsgWidgetContentSound)
                     .HasForeignKey(d => d.SoundFileId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    .IsRequired(false);
 
                 entity.HasOne(d => d.Animation)
                     .WithMany(p => p.MsgWidgetContentAnimation)
                     .HasForeignKey(d => d.AnimationFileId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    .IsRequired(false);
 
             });
             
@@ -439,8 +441,6 @@ namespace DIPLOMA.Data
 
             });
             
-
-
             modelBuilder.Entity<TextStyle>(entity =>
             {
                 //entity.Property(e => e.ID).

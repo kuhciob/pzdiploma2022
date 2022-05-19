@@ -113,15 +113,16 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col">
+                                        <div class="col-6">
                                             <input asp-for="VMMsgWidgetContent[i].AnimFormFile" class="form-control-file"
                                                    accept="image/*" onchange="loadImg(event, @i)" />
                                             <span asp-validation-for="VMMsgWidgetContent[i].AnimFormFile" class="text-danger"></span>
                                         </div>
-                                        <div class="col">
+                                        <div class="col-6">
                                             <input asp-for="VMMsgWidgetContent[i].SoundFormFile" accept="audio/*"
-                                                   class="form-control-file" onchange="loadSound(event, @i)" />
+                                                   class="custom-file-input" onchange="loadSound(event, @i)" />
                                             <span asp-validation-for="VMMsgWidgetContent[i].SoundFormFile" class="text-danger"></span>
+
                                         </div>
                                     </div>
 

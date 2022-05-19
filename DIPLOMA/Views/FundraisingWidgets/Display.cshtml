@@ -7,6 +7,7 @@
 
 }
 <script>
+
     setTimeout(function () { location.reload() }, 10000);
 </script>
 <div style="
@@ -15,7 +16,7 @@
     flex-direction: column;
     justify-content: space-between; 
     align-items: center;">
-    <div>@Model.ProgressPercent%</div>
+    <div>@Model.HeaderText.Replace("{percentage}", Model.ProgressPercent.ToString() + "%")</div>
     <div id="widget" style="
             width: 100%; 
             display: flex; 
