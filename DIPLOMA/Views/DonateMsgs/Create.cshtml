@@ -41,39 +41,50 @@
                 <div class="col">
                     @if (string.IsNullOrEmpty(Model.User.UserProfile.Youtube) == false)
                     {
-                        <a href="@Model.User.UserProfile.Youtube"><img src="~/imgs/youtube_icin_square.png" width="@iconWidth" style="padding:2px" /></a>
+                        <a href="@Model.User.UserProfile.Youtube"><img src="~/imgs/icons/youtube_icin_square.png" width="@iconWidth" style="padding:2px" /></a>
                     }
                     @if (string.IsNullOrEmpty(Model.User.UserProfile.Twitch) == false)
                     {
-                        <a href="@Model.User.UserProfile.Twitch"><img src="~/imgs/twitch_tile_logo_icon.png" width="@iconWidth" style="padding:2px" /></a>
+                        <a href="@Model.User.UserProfile.Twitch"><img src="~/imgs/icons/twitch_tile_logo_icon.png" width="@iconWidth" style="padding:2px" /></a>
                     }
                     @if (string.IsNullOrEmpty(Model.User.UserProfile.Facebook) == false)
                     {
-                        <a href="@Model.User.UserProfile.Facebook"><img src="~/imgs/facebook_icon_2.png" width="@iconWidth" style="padding:2px" /></a>
+                        <a href="@Model.User.UserProfile.Facebook"><img src="~/imgs/icons/facebook_icon_2.png" width="@iconWidth" style="padding:2px" /></a>
                     }
                     @if (string.IsNullOrEmpty(Model.User.UserProfile.Instagram) == false)
                     {
-                        <a href="@Model.User.UserProfile.Instagram"><img src="~/imgs/inst_icon_square.png" width="@iconWidth" style="padding:2px" /></a>
+                        <a href="@Model.User.UserProfile.Instagram"><img src="~/imgs/icons/inst_icon_square.png" width="@iconWidth" style="padding:2px" /></a>
                     }
                     @if (string.IsNullOrEmpty(Model.User.UserProfile.Twitter) == false)
                     {
-                        <a href="@Model.User.UserProfile.Twitter"> <img src="~/imgs/twitter_icon.png" width="@iconWidth" style="padding:2px" /></a>
+                        <a href="@Model.User.UserProfile.Twitter"> <img src="~/imgs/icons/twitter_icon.png" width="@iconWidth" style="padding:2px" /></a>
                     }
                     @if (string.IsNullOrEmpty(Model.User.UserProfile.Telegram) == false)
                     {
-                        <a href="@Model.User.UserProfile.Telegram"><img src="~/imgs/telegram_icon_square.png" width="@iconWidth" style="padding:2px" /></a>
+                        <a href="@Model.User.UserProfile.Telegram"><img src="~/imgs/icons/telegram_icon_square.png" width="@iconWidth" style="padding:2px" /></a>
                     }
                     @if (string.IsNullOrEmpty(Model.User.UserProfile.Youtube) == false)
                     {
 
-                        <a href="@Model.User.UserProfile.Discord"><img src="~/imgs/discord_icon.png" width="@iconWidth" style="padding:2px" /></a>
+                        <a href="@Model.User.UserProfile.Discord"><img src="~/imgs/icons/discord_icon.png" width="@iconWidth" style="padding:2px" /></a>
                     }
 
 
                 </div>
             </div>
+            @if (string.IsNullOrEmpty(Model.User.UserProfile.Bio) == false)
+            {
+                <div class="m-5 p-3"
+                     style="        background-color: rgba(117, 135, 146, 0.78);
+        height: 100%;
+        border-radius: 10px;
+        margin-top: 10px !important">
+                    <p><h4>@Model.User.UserProfile.Bio</h4></p>
+                </div>
+            }
+
             <div class="m-5 p-3"
-                 style="        background-color: cornflowerblue;
+                 style="        background-color: rgba(117, 135, 146, 0.78);
         height: 100%;
         border-radius: 10px;
         margin-top: 10px !important">
@@ -87,12 +98,12 @@
                     </div>
                     <div class="form-group">
                         <label asp-for="Amount" class="control-label"></label>
-                        <input asp-for="Amount" class="form-control" type="number" step="0.01"/>
+                        <input asp-for="Amount" class="form-control" type="number" step="0.01" />
                         <span asp-validation-for="Amount" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Message" class="control-label"></label>
-                        <textarea asp-for="Message" class="form-control"  rows="10"></textarea>
+                        <textarea asp-for="Message" class="form-control" rows="10"></textarea>
                         <span asp-validation-for="Message" class="text-danger"></span>
                     </div>
                     <div class="form-group" style="display:none">

@@ -43,6 +43,8 @@ namespace DIPLOMA.Areas.Identity.Pages.Account.Manage
             
             [Display(Name = "Nickname")]
             public string Nickname { get; set; }
+            [Display(Name = "Card Number")]
+            public string CardNumber { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -55,7 +57,8 @@ namespace DIPLOMA.Areas.Identity.Pages.Account.Manage
             Input = new InputModel
             {
                 PhoneNumber = phoneNumber,
-                Nickname = user.NickName
+                Nickname = user.NickName,
+                CardNumber = user.CardNumber
             };
         }
 
@@ -112,9 +115,10 @@ namespace DIPLOMA.Areas.Identity.Pages.Account.Manage
                 {
                     user.NickName = Input.Nickname.ToLower();
                     await _userManager.UpdateAsync(user);
-                    await _context.SaveChangesAsync();
                 }
             }
+            user.CardNumber = Input.CardNumber.ToLower();
+            await _context.SaveChangesAsync();
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";

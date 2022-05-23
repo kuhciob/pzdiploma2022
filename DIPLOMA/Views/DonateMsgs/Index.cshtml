@@ -6,6 +6,21 @@
     ViewData["ActivePage"] = DIPLOMA.Views.Panel.PanelNavPages.Messages;
 }
 
+<form asp-action="Index" method="get" class="btn-group mr-2">
+
+    <div class="input-group m-1">
+        <label for="StartDate" class="col-form-label p-1">Satart time</label>
+        <input type="date" class="form-control" placeholder="Start date"
+               aria-describedby="btnGroupAddon" name="StartDate" value="@ViewBag.StartDate?.ToString("yyyy-MM-dd")">
+    </div>
+    <div class="input-group m-1">
+        <label for="EndDate" class="col-form-label p-1">End time</label>
+        <input type="date" class="form-control" placeholder="End date" name="EndDate" value="@ViewBag.EndDate?.ToString("yyyy-MM-dd")">
+    </div>
+
+    <input type="submit" value="Apply" class="btn btn-outline-primary" />
+</form>
+
 <table class="table">
     <thead>
         <tr>

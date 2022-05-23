@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 
 namespace DIPLOMA.Models
 {
-    public class ChartDateAmtData
+    public class DashboardStatistic
     {
+        public string ChartDivID { get; set; }
+
+        public string Caption { get; set; }
+        public decimal TotalAmt { get; set; }
         public List<DateTime> Dates { get; set; }
         public List<decimal> Amounts { get; set; }
+        public List<DonateMsg> TopDonators { get; set; }
+        public List<DonateMsg> AllDonateMsgs { get; set; }
 
     }
     public class DashboardViewModel
     {
-        public ChartDateAmtData AllDonatesChart { get; set; }
-        public ChartDateAmtData InBordersChart { get; set; }
+        public DashboardStatistic AllDonatesChart { get; set; }
+        public DashboardStatistic InBordersChart { get; set; }
 
-        public List<DonateMsg> AllDonateMsgs { get; set; }
-        public List<DonateMsg> InBordersDonateMsgs { get; set; }
-        public List<DonateMsg> TopDonators { get; set; }
-        public List<DonateMsg> InBordersTopDonators { get; set; }
-        public decimal AllTimeAmt { get; set; }
-        public decimal InBordersAmt { get; set; }
         [Display(Name = "Created Date")]
         public DateTime CreatedDate { get; set; }
     }

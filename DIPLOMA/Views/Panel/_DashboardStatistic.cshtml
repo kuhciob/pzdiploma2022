@@ -1,0 +1,79 @@
+﻿@model DashboardStatistic
+
+<script>
+    function buildtimeChart(divId, xData, yData ) {
+
+        console.log(yData);
+
+
+        let alltimesdata = [{
+            x: xData,
+            y: yData,
+            type: "bar"
+        }];
+
+        let alltimeslayout = {
+            title: "Amount per day"
+        };
+
+
+        Plotly.newPlot(document.getElementById(divId), alltimesdata, alltimeslayout);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        @*let alldates = @Html.Raw(Json.Serialize(@Model.AllDonatesChart.Dates));
+        let allamtss = @Html.Raw(Json.Serialize(@Model.AllDonatesChart.Amounts));
+        buildAalltimeChart('AllTimeChart', alldates, allamtss);*@
+
+        let inBordersdates = @Html.Raw(Json.Serialize(@Model.Dates));
+        let inBordersamtss = @Html.Raw(Json.Serialize(@Model.Amounts));
+
+        buildtimeChart('@Model.ChartDivID', inBordersdates, inBordersamtss);
+
+    });
+
+</script>
+<div>
+
+
+
+    <div class="row">
+        <h4>Collected amount = <b>@Model.TotalAmt.ToString("C")</b> </h4>
+    </div>
+    <div class="row">
+        <h4>Number of donations = <b>@Model.AllDonateMsgs.Count</b> </h4>
+    </div>
+    <div class="row">
+        <h4>Average donation = <b>@(Model.AllDonateMsgs.Count != 0 ? Model.AllDonateMsgs.Average(r => r.Amount.GetValueOrDefault()).ToString("C") : "0" )</b> </h4>
+    </div>
+    <div class="row">
+        <h4>Max donation = <b>@(Model.AllDonateMsgs.Count != 0 ? Model.AllDonateMsgs.Max(r => r.Amount.GetValueOrDefault()).ToString("C") : "0" )</b> </h4>
+    </div>
+    <div class="row">
+        <h4>Min donation = <b>@(Model.AllDonateMsgs.Count != 0 ? Model.AllDonateMsgs.Min(r => r.Amount.GetValueOrDefault()).ToString("C") : "0" )</b> </h4>
+    </div>
+    <div id="@Model.ChartDivID" style="width:auto;height:auto"></div>
+
+    <br />
+    <div class="row">
+        <h4 style="text-align:center">TOP-10 Donators:</h4>
+    </div>
+    <div class="row" style="text-align:center">
+        <table class="table">
+
+            <tr>
+                <th>Username</th>
+                <th>Amount</th>
+
+            </tr>
+            @foreach (var item in Model.TopDonators)
+            {
+                <tr>
+                    <th>@item.DonatorName</th>
+                    <th>@item.Amount.GetValueOrDefault().ToString("C")</th>
+                </tr>
+            }
+        </table>
+
+    </div>
+</div>

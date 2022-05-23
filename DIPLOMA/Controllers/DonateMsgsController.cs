@@ -35,16 +35,62 @@ namespace DIPLOMA.Controllers
         {
             _donateHub = hubContext;
         }
-        
-        //// GET: DonateMsgs
-        public async Task<IActionResult> Index()
-        {
-            var applicationDbContext = _context.DonateMsg.
-                Include(d => d.User).
-                Where(r => r.UserID == _currentUserId);
-            return View(await applicationDbContext.ToListAsync());
-        }
 
+        //// GET: DonateMsgs
+        public async Task<IActionResult> Test()
+        {
+            List<string> Donators = new List<string> { "Ivan", "Petro Kegla", "Mazeppa", "Ruslannndsa", "BAZA" };
+            Random random = new Random();
+
+            double minDonateAmt = 300;
+            double maxDonateAmt = 500000;
+
+            var donates = await _context.DonateMsg.
+                Include(m => m.User).
+                Where(r => r.UserID == _currentUserId).
+                ToListAsync();
+
+            DateTime startDate = donates.Min(r => r.CreatedDate).Date;
+
+            DateTime dateTime = DateTime.Now.Date;
+
+            while(startDate <= dateTime)
+            {
+                DonateMsg donateMsg = new DonateMsg()
+                {
+                    CreatedDate = startDate,
+                    DonatorName = Donators.ElementAt(random.Next(Donators.Count)),
+                    Message = $"Test Donate {startDate.ToShortDateString()}",
+                    Amount = Convert.ToDecimal(random.NextDouble() * (maxDonateAmt - minDonateAmt) + minDonateAmt),
+                    Read = true,
+                    UserID = _currentUserId,
+                    UpdatedDate = startDate,
+                    CheckoutSessionSucceed = true
+                };
+
+                _context.Add(donateMsg);
+                startDate = startDate.AddDays(1);
+            }
+            await _context.SaveChangesAsync();
+            return new JsonResult("Done");
+        }
+        public async Task<IActionResult> Index(DateTime? StartDate, DateTime? EndDate, string DonatorName)
+        {
+            var donateMsgs = _context.DonateMsg.
+                Include(m => m.User).
+                Where(r => r.UserID == _currentUserId);
+
+            donateMsgs = donateMsgs.
+                Where(r => (r.CreatedDate >= StartDate || StartDate == null)
+                && (r.CreatedDate <= EndDate || EndDate == null)
+                && (string.IsNullOrEmpty(DonatorName) || r.DonatorName == DonatorName));
+
+            ViewBag.StartDate = StartDate;
+            ViewBag.EndDate= EndDate;
+            ViewBag.DonatorName = DonatorName;
+
+            return View(await donateMsgs.ToListAsync());
+        }
         // GET: Donate/lvasuk
         [AllowAnonymous]
         [HttpGet("TestDonate/{username}")]

@@ -7,64 +7,11 @@
 }
 
 <script src="https://cdn.plot.ly/plotly-2.12.1.min.js"></script>
-<script>
-    function buildAalltimeChart(divId, xData, yData ) {
 
-        console.log(yData);
-
-
-        let alltimesdata = [{
-            x: xData,
-            y: yData,
-            type: "bar"
-        }];
-
-        let alltimeslayout = {
-            title: "Amount per day"
-        };
-
-
-        Plotly.newPlot(document.getElementById(divId), alltimesdata, alltimeslayout);
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        let alldates = @Html.Raw(Json.Serialize(@Model.AllDonatesChart.Dates));
-        let allamtss = @Html.Raw(Json.Serialize(@Model.AllDonatesChart.Amounts));
-        buildAalltimeChart('AllTimeChart', alldates, allamtss);
-    });
-
-</script>
-
-<br />
-
-<h3>Statistics for all time</h3>
 <div class="row">
-    <h4>The total donates amount = <b>@Model.AllTimeAmt</b> </h4>
-</div>
-<div id="AllTimeChart" style="width:auto;height:auto"></div>
-
-
-<br />
-<div class="row">
-    <table class="table">
-        <caption>Top donators</caption>
-        <tr>
-            <th>Username</th>
-            <th>Amount</th>
-
-        </tr>
-        @foreach (var item in Model.TopDonators)
-        {
-            <tr>
-                <th>@item.DonatorName</th>
-                <th>@item.Amount</th>
-            </tr>
-        }
-    </table>
-
+    <h2 style="text-align:center"><b>@Model.InBordersChart.Caption</b></h2>
 </div>
 <br />
-<h3>Statistics for the time period</h3>
 
 <div class="row">
     <form asp-action="Index" method="get" class="btn-group mr-2">
@@ -72,11 +19,11 @@
         <div class="input-group m-1">
             <label for="StartDate" class="col-form-label p-1">Satart time</label>
             <input type="date" class="form-control" placeholder="Start date"
-                   aria-describedby="btnGroupAddon" name="StartDate">
+                   aria-describedby="btnGroupAddon" name="StartDate" value="@ViewBag.StartDate?.ToString("yyyy-MM-dd")">
         </div>
         <div class="input-group m-1">
             <label for="EndDate" class="col-form-label p-1">End time</label>
-            <input type="date" class="form-control" placeholder="End date" name="EndDate">
+            <input type="date" class="form-control" placeholder="End date" name="EndDate" value="@ViewBag.EndDate?.ToString("yyyy-MM-dd")">
         </div>
 
         <input type="submit" value="Apply" class="btn btn-outline-primary" />
@@ -84,24 +31,6 @@
 </div>
 
 
-<div class="row">
-    <h4>The total donates amount = <b>@Model.InBordersAmt</b> </h4>
+<br />
+@await Html.PartialAsync("~/Views/Panel/_DashboardStatistic.cshtml", Model.InBordersChart)
 
-</div>
-
-<div class="row">
-    <table >
-        <tr>
-            <th>Username</th>
-            <th>Amount</th>
-
-        </tr>
-        @foreach (var item in Model.InBordersTopDonators)
-        {
-            <tr>
-                <th>@item.DonatorName</th>
-                <th>@item.Amount</th>
-            </tr>
-        }
-    </table>
-</div>

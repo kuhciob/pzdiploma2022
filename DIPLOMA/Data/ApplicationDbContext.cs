@@ -17,10 +17,10 @@ namespace DIPLOMA.Data
         }
 
         public ApplicationDbContext() { }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server=KUHCIOB;Database=DIPLOMA;Trusted_Connection=True;MultipleActiveResultSets=true");
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Server=KUHCIOB;Database=DIPLOMA;Trusted_Connection=True;MultipleActiveResultSets=true");
+        //}
 
         public DbSet<DIPLOMA.Models.DonateMsg> DonateMsg { get; set; }
         public DbSet<DIPLOMA.Models.MsgWidget> MsgWidget { get; set; }

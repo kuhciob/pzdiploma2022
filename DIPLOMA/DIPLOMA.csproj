@@ -69,11 +69,10 @@
 
   <ItemGroup>
     <Folder Include="Models\Enums\" />
-    <Folder Include="wwwroot\imgs\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\imgs\discord_icon.png">
+    <Content Update="wwwroot\imgs\icons\discord_icon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

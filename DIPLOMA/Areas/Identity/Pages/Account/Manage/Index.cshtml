@@ -25,6 +25,13 @@
                 <input asp-for="Input.PhoneNumber" class="form-control" />
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="Input.CardNumber"></label>
+                <input asp-for="Input.CardNumber" class="form-control" 
+                 type="tel" inputmode="numeric" pattern="[0-9\s]{13,19}" autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx"/>
+                <span asp-validation-for="Input.CardNumber" class="text-danger"></span>
+            </div>
+            
             <button id="update-profile-button" type="submit" class="btn btn-primary">Save</button>
         </form>
     </div>

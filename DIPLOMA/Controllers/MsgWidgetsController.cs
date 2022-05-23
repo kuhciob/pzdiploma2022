@@ -319,11 +319,12 @@ namespace DIPLOMA.Controllers
                 Where(r => r.MsgWidgetID == id).
                 Include(r => r.Sound).
                 Include(r => r.Animation).
+                Select(r => r.ID).
                 ToListAsync();
 
             foreach (var item in contentList)
             {
-                existedContentToDeleate.RemoveAll(r => r.ID == item.ID);
+                existedContentToDeleate.RemoveAll(r => r == item.ID);
             }
 
             if (id != msgWidget.ID)
@@ -369,6 +370,7 @@ namespace DIPLOMA.Controllers
                                 content.AnimationFileId = animUploadFile.ID;
                            
                                 _context.Add(animUploadFile);
+
                             }
                             if (soundFromFile != null)
                             {
@@ -383,11 +385,16 @@ namespace DIPLOMA.Controllers
 
                                 _context.Add(soundUploadFile);
 
+
                             }
+                            _context.Update(content);
+
+
                             if (content.ID != null
-                                && content.MsgWidgetID != null)
+                                && content.MsgWidgetID != null
+                                && msgWidget.MsgWidgetContent.Contains(content) ==false)
                             {
-                                msgWidget.MsgWidgetContent.Add(content);
+                                //msgWidget.MsgWidgetContent.Add(content);
                             }
                             else
                             {
@@ -415,7 +422,8 @@ namespace DIPLOMA.Controllers
                     }
                     foreach (var item in existedContentToDeleate)
                     {
-                        _context.Remove(item);
+                        _context.Remove(_context.MsgWidgetContent.
+                                        FirstOrDefault(f => f.ID == item));
                     }
                     
                     await _context.SaveChangesAsync();
