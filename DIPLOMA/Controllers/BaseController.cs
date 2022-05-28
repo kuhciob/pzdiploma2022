@@ -32,7 +32,7 @@ namespace DIPLOMA.Controllers
                 FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
 
-        protected async Task<UploadFile> GetUploadFileAsync(IFormFile formFile)
+        public async Task<UploadFile> GetUploadFileAsync(IFormFile formFile)
         {
             using (var memoryStream = new MemoryStream())
             {
@@ -51,8 +51,8 @@ namespace DIPLOMA.Controllers
                 return uploadFile;
             }
         }
-        
-        protected IEnumerable<(string, string)> ContanteToUrls(IEnumerable<MsgWidgetContent> contentList)
+
+        public IEnumerable<(string, string)> ContanteToUrls(IEnumerable<MsgWidgetContent> contentList)
         {
             foreach (var item in contentList)
             {
@@ -66,7 +66,7 @@ namespace DIPLOMA.Controllers
         /// <param name="content"></param>
         /// <param name="issound"></param>
         /// <returns></returns>
-        protected string ContanteToUrls(UploadFile content, bool issound = false)
+        public string ContanteToUrls(UploadFile content, bool issound = false)
         {
             string scr = "";
             if(content != null)
@@ -108,7 +108,7 @@ namespace DIPLOMA.Controllers
             }
             return scr;
         }
-        protected (string, string) ContanteToUrls(MsgWidgetContent content)
+        public (string, string) ContanteToUrls(MsgWidgetContent content)
         {
             string animScr = "";
             string soundScr = "";
@@ -150,7 +150,7 @@ namespace DIPLOMA.Controllers
 
             return (animScr, soundScr);
         }
-        protected IFormFile GetFormFile(UploadFile uploadFile)
+        public IFormFile GetFormFile(UploadFile uploadFile)
         {
             if (uploadFile != null
                 && uploadFile.Data != null)

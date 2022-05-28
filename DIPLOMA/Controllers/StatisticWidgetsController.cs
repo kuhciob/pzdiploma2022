@@ -370,7 +370,7 @@ namespace DIPLOMA.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StatisticWidgetExists(Guid id)
+        public bool StatisticWidgetExists(Guid id)
         {
             return _context.StatisticWidget.Any(e => e.ID == id);
         }

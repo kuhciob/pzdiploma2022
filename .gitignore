@@ -2,3 +2,5 @@
 /DIPLOMA/bin
 /DIPLOMA/appsettings.Development.json
 /DIPLOMA/appsettings.json
+/DIPLOMA.Test/bin
+/DIPLOMA.Test/obj

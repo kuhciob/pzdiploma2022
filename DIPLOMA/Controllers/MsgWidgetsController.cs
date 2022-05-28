@@ -55,7 +55,6 @@ namespace DIPLOMA.Controllers
                 .Include(m => m.MsgWidgetContent)
                 .ThenInclude(m => m.Sound)
                .Include(m => m.TextStyle)
-
                 .FirstOrDefaultAsync(m => m.ID == id);
 
             DisplayMsgViewModel displayMsgViewModel = new DisplayMsgViewModel();
@@ -113,8 +112,7 @@ namespace DIPLOMA.Controllers
                 .ThenInclude(m => m.Sound)
                 .Include(m => m.MsgWidgetContent)
                 .ThenInclude(m => m.Animation)
-               .Include(m => m.TextStyle)
-
+                .Include(m => m.TextStyle)
                 .Where(r => r.UserID == _currentUserId)
                 .FirstOrDefaultAsync(m => m.ID == id);
 
@@ -516,7 +514,19 @@ namespace DIPLOMA.Controllers
         }
         #endregion
         #region Helpers
-        protected string GetUploadedFileName(IFormFile file)
+        public async Task<MsgWidget> GetMsgWidget(Guid id)
+        {
+            return await _context.MsgWidget
+                //.Include(m => m.User)
+                //.Include(m => m.MsgWidgetContent)
+                //.ThenInclude(m => m.Sound)
+                //.Include(m => m.MsgWidgetContent)
+                //.ThenInclude(m => m.Animation)
+                //.Include(m => m.TextStyle)
+                .Where(r => r.UserID == _currentUserId)
+                .FirstOrDefaultAsync(m => m.ID == id);
+        }
+        public string GetUploadedFileName(IFormFile file)
         {
             string uniqueFileName = null;
 
@@ -532,8 +542,8 @@ namespace DIPLOMA.Controllers
             }
             return uniqueFileName;
         }
-        
-        private bool MsgWidgetExists(Guid id)
+
+        public bool MsgWidgetExists(Guid id)
         {
             return _context.MsgWidget.Any(e => e.ID == id);
         }

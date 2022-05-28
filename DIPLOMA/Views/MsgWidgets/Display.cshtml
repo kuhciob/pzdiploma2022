@@ -106,26 +106,24 @@
             responsiveVoice.speak(message, voice);
 
         }
-
     }
 
     function voiceMessage(message) {
             let utter = new SpeechSynthesisUtterance();
-            //if the English language
+
             if (/^[a-zA-Z]+$/.test(message))
             {
                 utter.lang = 'en-US';
             }
-            else //if the not English language
+            else 
             {
                 utter.lang = 'ru-RU';
             }
-
             utter.text = message;
             utter.volume = 1;
 
             window.speechSynthesis.speak(utter);
-        }
+     }
     function displayContent() {
         let audioSrc = "";
         let imgSrc = "";

@@ -143,7 +143,6 @@ namespace DIPLOMA.Controllers
         [AllowAnonymous]
         [HttpGet("Donate/{username}")]
         //[HttpGet()]
-
         public async Task<IActionResult> Create(string username)
         {
             if (string.IsNullOrEmpty(username))
@@ -383,20 +382,7 @@ namespace DIPLOMA.Controllers
 
             return View(donate);
         }
-        //[HttpGet("Donates/{userid}")]
-        //public async Task<IActionResult> Show(string userid)
-        //{
-        //    var user = await _context.Users
-        //        .FirstOrDefaultAsync(m => m.Id == userid);
 
-        //    if (user == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", userid);
-
-        //    return View(new DonateMsg() { UserID = userid });
-        //}
         // GET: DonateMsgs/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
@@ -522,7 +508,7 @@ namespace DIPLOMA.Controllers
 
             return ipInfo.Country;
         }
-        private bool DonateMsgExists(int? id)
+        protected bool DonateMsgExists(int? id)
         {
             return _context.DonateMsg.Any(e => e.ID == id);
         }

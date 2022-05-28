@@ -22,7 +22,7 @@ namespace DIPLOMA.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public FundraisingWidgetsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
-            IWebHostEnvironment webHost, IHttpContextAccessor httpContextAccessor)
+            IWebHostEnvironment webHost, IHttpContextAccessor httpContextAccessor )
             : base(context, userManager, httpContextAccessor)
         {
             _webHostEnvironment = webHost;
@@ -242,7 +242,7 @@ namespace DIPLOMA.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool FundraisingWidgetExists(Guid id)
+        public bool FundraisingWidgetExists(Guid id)
         {
             return _context.FundraisingWidget.
                 Where(r => r.UserID == _currentUserId).

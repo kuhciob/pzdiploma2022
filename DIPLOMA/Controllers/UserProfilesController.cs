@@ -329,7 +329,7 @@ namespace DIPLOMA.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserProfileExists(Guid id)
+        public bool UserProfileExists(Guid id)
         {
             return _context.UserProfile.Any(e => e.ID == id);
         }
